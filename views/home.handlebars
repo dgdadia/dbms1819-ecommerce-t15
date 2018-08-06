@@ -8,86 +8,56 @@
 	  color: #FFC0CB;
 	}
 
-.active {
-  background-color: #33535;
-}
-
-/* Fading animation */
-.slide {
-  -webkit-animation-name: slide;
-  -webkit-animation-duration: 2s;
-  animation-name: slide;
-  animation-duration: 2s;
-}
 .footer {
    position: fixed;
    left: 0;
    bottom: 0;
    width: 100%;
-   background-color: #FFC0CB ;
+   background-color: #FF69B4 ;
    color: white;
    text-align: center;
 }
-.
-@-webkit-keyframes fade {
-  from {opacity: .4} 
-  to {opacity: 1}
-}
+	.intro{
+		height: 100%;
+		width: 100%;
+		margin: auto;
+		display: table;
+		top: 0;
+	}
+	.intro .inner{
+		display: table-cell;
+		vertical-align: middle;
+		width: 100%;
+		max-width: none;
+	}
+	.content{
+		max-width: 1000px;
+		margin: 0 auto;
+		text-align: center;
+		top: 10%;
+	}
+	btn{
 
-@keyframes fade {
-  from {opacity: .4} 
-  to {opacity: 1}
-}
-
-/* On smaller screens, decrease text size */
-@media only screen and (max-width: 300px) {
-  .text {font-size: 11px}
-}
+	}
 </style>
-</head>
+
+<body>
+<!--Landing-->
+<section class="intro">
+<div class="inner">
+	<div class="content">
+		<img src="http://gr8sh.webs.com/ggmemochou/posts/bquotes/1.jpg" style="height: 100% ; width 100%;" ><br>
+		<a class="btn btn-danger btn-lg" href="/products" role="button">SHOP NOW</a>
+</div>
+</body>
+</style>
+
 <body>
 
-<div class="mySlides fade">
-  <img src="https://media.self.com/photos/57e00e471db118765d302bdd/4:3/w_768,c_limit/sub-channel-beauty_makeup.jpg" style="width:800px; height:300px;" class="rounded mx-auto d-block">
-</div>
+	
 
-<div class="mySlides fade">
-  <img src="https://thumbs.dreamstime.com/b/decorative-flat-lay-composition-cosmetics-flowers-flat-lay-top-view-woman-red-rose-white-background-make-up-85794058.jpg" style="height:300px;width:800px;" class="rounded mx-auto d-block">
-</div>
-
-<div class="mySlides fade">
-  <img src="https://image.freepik.com/free-photo/makeup-cosmetics-palette-and-brushes-on-pink-background-flat-lay_1357-272.jpg" style="height:300px;width:800px;" class="rounded mx-auto d-block">
-</div>
-
-<div class="mySlides fade">
-  <img src="https://www.buro247.sg/local/instagram/photos/28156645_162441477889614_4674338050698903552_n.jpg" style="height:300px;width:800px;" class="rounded mx-auto d-block">
-</div>
-</div>
-
-<script>
-var slideIndex = 0;
-showSlides();
-
-function showSlides() {
-    var i;
-    var slides = document.getElementsByClassName("mySlides");
-    var dots = document.getElementsByClassName("dot");
-    for (i = 0; i < slides.length; i++) {
-       slides[i].style.display = "none";  
-    }
-    slideIndex++;
-    if (slideIndex > slides.length) {slideIndex = 1}    
-    for (i = 0; i < dots.length; i++) {
-        dots[i].className = dots[i].className.replace(" active", "");
-    }
-    slides[slideIndex-1].style.display = "block";  
-    dots[slideIndex-1].className += " active";
-    setTimeout(showSlides, 3000); // Change image every 3 seconds
-}
-</script>
-
-
-
+<div class="footer">
+  <p> © Copyright 2018 - Dadia & Dizon</p>
 </div>
 
 
