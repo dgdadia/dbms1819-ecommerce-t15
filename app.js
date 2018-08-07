@@ -199,7 +199,7 @@ app.get('/products/:id', (req,res)=>{
 				list.push(data.rows[i-1]);
 			}
 		}
-		res.render('products',{
+		res.render('product-details',{
 			data: list
 		});
 	});
