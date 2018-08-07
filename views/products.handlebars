@@ -1,80 +1,35 @@
-<!--<style>
-	.table{
-		margin-top: 20%;
-	}
-</style>
-<body>
-<!Table from DB>
-<div class="container text-center table-sm">
-<table class="table table-bordered">
-	<thead>
-		<tr>
-			<th>ID</th>
-			<th>NAME</th>
-			<th>TYPE</th>
-			<th>DESCRIPTION</th>
-			<th>BRAND</th>
-			<th>PRICE</th>
-			<th>PICTURE</th>
-		</tr>
-	</thead>
-{{#rows}}
-	<tbody>
-		<tr>
-			<td>{{id}}</td>
-			<td>{{name}}</td>
-			<td>{{type}}</td>
-			<td>{{description}}</td>
-			<td>{{brand}}</td>
-			<td>{{price}}</td>
-			<td><img src="{{picture}}" style="height: 100px; width:100px"></td>
-		</tr>
-	</tbody>
-{{/rows}}
-</table>
-</body>-->
 <style>
   	@import url('https://fonts.googleapis.com/css?family=Homemade Apple');
 	@import url('https://fonts.googleapis.com/css?family=Poppins');
 	@import url('https://fonts.googleapis.com/css?family=Khand');
-.h1{
-	font-size: 125%;
-	color: #fff;
-	text-shadow: 0px 0px 300px #000;
-	margin-bottom: 5%;
-	font-family: 'Khand', sans-serif;
-}
+
 .card{
-	background-color: #8600b3;
+	background-color: #FFB6C1;
 }
 .text-box{
-	background-color: #8600b3;
+	background-color: #FFB6C1;
 }
 h5{
 	font-style: bold;
-	color: #e699ff;
+	color: #A52A2A;
 }
 h5:hover{
-	color: white;
+	color: darkgoldenrod ;
 }
 a:hover{
 	text-decoration: none;
 }
 </style>
-
-
-
-<div class="container">
+	
 	<div class="jumbotron mt-2">
-		<h1 class="mt-0 mb-5 text-center">{{title}}</h1>
 		<div class="row mx-4">
 			{{#each data}}
 			<div class="col-lg-4 col-md-4 col-sm-12 mb-4 mx-auto">
 				<div class="card center">
-					<a href="/products/{{this.id}}">
-						<img class="card-img-top" src="{{this.picture}}">
+					<a href="/products/{{this.id}}"><br>
+						<img class="card-img-top" src="{{this.photo}}">
 						<div class="text-box">
-								<h5 class="card-title text-center my-3">{{this.brand}} {{this.name}}</h5>
+								<h5 class="card-title text-center my-3">{{this.brand}} <br>{{this.name}}</h5>
 						</div>
 					</a>
 				</div>
