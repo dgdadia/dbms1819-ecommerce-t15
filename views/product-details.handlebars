@@ -9,27 +9,28 @@
 	font-family: 'Poppins', sans-serif;
 }
 .card{
-	background: linear-gradient(to right, #c61aff, #f9e6ff);
+	background: #FF1493;
+	margin-top: 20px;
 }
 .card-body{
 	color: white;
 }
 .header-design{
-	background-color: #8600b3;
+	background-color: #FF1493;
 	color: white;
 	font-style: bold;
 }
 .body-design{
-	background: linear-gradient(#c61aff, #f9e6ff);
+	background: #FFC0CB;
 }
 .btn-design{
-	background-color: none;
-	border-color: #8600b3;
-	color: #c61aff;
+	background-color:#FFC0CB ;
+	border-color:#FF1493;
+	color: white;
 }
 .btn-design:hover{
-	background-color: #8600b3;
-	border-color: #c61aff;
+	background-color: #FFC0CB;
+	border-color: #FF1493;
 	color: white;
 }
 .lbl-text{
@@ -37,103 +38,27 @@
 	font-style: bold;
 	text-transform: capitalize;
 }
-.go-back {
-	display: block;
-	float: right;
-	margin-top: 20px;
-}
-.go-back a{
-	text-decoration: none !important;
-	color:black;
-}
-</style>
 
+</style>
+<body>
 <div class="container">
-	<div class="jumbotron mt-2 jumbotron-design">
 		{{#each data}}
-		<h1 class="mt-3 text-center">{{this.name}}</h1>
+			<a href="/products" class="btn btn-danger btn-lg" role="button" style="float: right">BACK</a>
 			<div class="col-lg-8 col-md-8 col-sm-8 mb-0 mx-auto">
 				<div class="card center">
 					<img class="card-img-top" src="{{this.photo}}" alt="{{this.name}}">
 					<div class="card-body">
-						<h4 class="card-title">{{this.brand}} - {{this.category}}</h4>
+						<h4 class="card-title">{{this.brand}} </h4>
+						<h4 class="card-title">{{this.name}}</h4>
+						<h6 class="card-title">{{this.description}} </h6>
 						<h5 class="card-title">₱ {{this.price}}.00</h5>
-						<h7 class="card-title">{{this.description}}
-						<button type="button" style="float:right" class="btn btn-lg btn-design" data-toggle="modal" data-target="#orderModal">Order Now!</button></h7>
+						
+						<a href="/form" style="float:right" class="btn btn-lg btn-design" role="button">Order Now!</button></h7>
 					</div>
-				</div>
 			</div>
 		{{/each}}
-		<div class="go-back">
-			<h4>{{msg}}</h4>
-			<a href="/products"><h5>&laquo;&ensp;Go back to products page</h5></a>
 		</div>
 	</div>
-</div>
+</body>
 
-<!--Order Modal-->
 
-<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-
-		<div class="modal-content">
-			<div class="modal-header header-design">
-				<h4 class="modal-title">CONTACT FORM</h4>
-				<button type="button" class="close" data-dismiss="modal">&times;
-				</button>
-			</div>
-
-			<div class="modal-body body-design">
-				{{#each data}}
-				<form method="POST" action="{{this.id}}/send">
-					<div class="controls">
-						<div class="form-group">
-							<label class="control-label lbl-text" for="name">Name</label>
-							<div>
-								<input id="name" name="name" type="text" placeholder="e.g. Juan Dela Cruz" class="form-control" required="">
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="control-label lbl-text" for="phone">Phone</label>
-							<div>
-								<input id="phone" name="phone" type="number" placeholder="e.g. 09976897678" class="form-control" required="">
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="control-label lbl-text" for="email">Email</label>
-							<div>
-								<input id="email" name="email" type="email" placeholder="e.g. jdelacruz@gmail.com" class="form-control" required="">
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="control-label lbl-text" for="productid">Product ID</label>
-							<div>
-								<input id="productid" name="productid" type="text" value="{{this.id}}" class="form-control" required="" readonly="">
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="control-label lbl-text" for="quantity">Quantity</label>
-							<div>
-								<input id="quantity" name="quantity" type="number" placeholder="10" class="form-control" required="">
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="text-center">
-								<button type="submit" class="btn btn-lg btn-design" title="Submit contact form">
-								Submit
-								</button>
-				          		<button type="button" class="btn btn-lg btn-design" data-dismiss="modal">Close</button>
-							</div>
-						</div>
-					</div>
-				</form>
-				{{/each}}
-			</div>
-{{!-- 			<div class="modal-footer">
-          		<button type="submit" class="btn btn-primary btn-lg">Submit
-          		</button>
-          		<button type="button" class="btn btn-primary btn-lg" data-dismiss="modal">Close</button>
-        	</div> --}}
-		</div>
-	</div>
-</div>
