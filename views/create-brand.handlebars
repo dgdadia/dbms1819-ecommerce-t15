@@ -7,18 +7,21 @@
 
 <div class="container">
 
-<h3> Create New Brand </h3>
+<h2 style=""> Create New Brand </h2><br>
 <form action="/brand/create/saving" method="POST">
 
  <div class="form-group">
-      <label for="name">BRAND</label>
+      <label for="name" style= "font-size:20px" >BRAND</label>
       <input type="text" class="form-control" name="brand_name" placeholder="YOUR FAVORITE BRAND" required="">
     </div>
 
 <div class="form-group">
-      <label for="name">DESCRIPTION</label>
-      <input type="text" class="form-control" name="brand_description" placeholder="" required="">
-       <input type="submit" class="btn" name="submit" value="Submit">
+      <label for="exampleTextarea" style= "font-size:20px">DESCRIPTION</label>
+      <textarea class="form-control" name="brand_description" rows="5" placeholder="" required=""> </textarea><br>
+
+       <button type="button" class="btn btn-danger" name="submit" value="submit">SUBMIT</button>
     </div>
+
+
     </form>
 </div>
