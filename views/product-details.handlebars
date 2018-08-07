@@ -41,61 +41,29 @@
 
 </style>
 <body>
-<!--<div class="container">
+<div class="container">
 		{{#each data}}
 			<a href="/products" class="btn btn-danger btn-lg" role="button" style="float: right">BACK</a>
 			<div class="col-lg-8 col-md-8 col-sm-8 mb-0 mx-auto">
 				<div class="card center">
-					<img class="card-img-top" src="{{this.photo}}" alt="{{this.name}}">
+					<img class="card-img-top" src="{{this.image}}" alt="{{this.name}}">
 					<div class="card-body">
+
 						<h4 class="card-title">{{this.brand}} </h4>
 						<h4 class="card-title">{{this.name}}</h4>
 						<h6 class="card-title">{{this.description}} </h6>
 						<h5 class="card-title">₱ {{this.price}}.00</h5>
+
+
 						
-						<a href="/form" style="float:right" class="btn btn-lg btn-design" role="button">Order Now!</button></h7>
 					</div>
+					<a href="/form" style="float:right" class="btn btn-lg btn-design" role="button">Order Now!</button>
 			</div>
-		{{/each}}
+			
 		</div>
-	</div>-->
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 mb-0 mx-auto">
-			<div class="card center">
-				<img class="card-img-top" src="{{image}}" alt="{{name}}">
-				<div class="card-body">
-					<h4 class="card-title">{{name}}</h4>
-					<h5 class="card-title">{{brandname}} Shoes</h5>
-				</div>
-			</div>
-		</div>
-		<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 mb-0 mx-auto">
-			<div class="jumbotron jumbotron-design">
-				<div class="modal-body">
-					<h5>{{name}} - {{brandname}}</h5>
-					<h6><i>{{category}}</i></h6>
-					<hr>
-					<ul>
-						<li style="text-decoration:none">Name: {{name}}</li>
-						<li style="text-decoration:none">Description: {{description}}</li>
-						<li style="text-decoration:none">Brand Name: {{brandname}}</li>
-						<li style="text-decoration:none">Brand Description: {{branddesc}}</li>
-						<li style="text-decoration:none">Tagline: {{tagline}}</li>
-						<li style="text-decoration:none">Warranty (in years): {{warranty}}</li>
-						<li style="text-decoration:none">Category: {{category}}</li>
-					</ul>
-				</div>
-				<hr>
-				<div class="modal-footer">
-					<button type="button" style="float:right; margin-right:20px;" class="btn btn-md btn-design" data-toggle="modal" data-target="#orderModal">Order Now!</button>
-					<button type="button" style="float:right; margin-right:20px;" href="/product/update/{{this.id}}" class="btn btn-md btn-design">Update Product</button>&ensp;&ensp;
-				</div>
-			</div>
-		</div>
+{{/each}}
+		
 	</div>
-</div>
-	
 </body>
 
 
