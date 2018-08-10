@@ -1,0 +1,39 @@
+<style>
+.container{
+  background-color: pink;
+  margin-top: 100px;
+}
+</style>
+
+<div class="container">
+  <h2>CUSTOMER ORDER FORM</h2>
+  <form action="/">
+    <h5> All information written will considered as true</h5>
+    <div class="form-group">
+      <label for="name">NAME:</label>
+      <input type="text" class="form-control" id="name" placeholder="Juana Dela Cruz" name="email" required="">
+    </div>
+     <div class="form-group">
+      <label for="number">PHONE:</label>
+      <input type="text" class="form-control" id="number" placeholder="09*********" name="number" required="">
+    </div>
+     <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" class="form-control" id="email" placeholder="youremail@gmail.com" name="email" required="">
+    </div>
+    <div class="form-group">
+      <label for="address">HOME ADDRESS:</label>
+      <input type="text" class="form-control" id="address" placeholder="House number,Bldg. unit, Baranggay, City" name="address" required="">
+    </div>
+    <div class="form-group">
+      <label for="productid">Product ID:</label>
+      <input type="text" class="form-control" value="{{this.id}}" id="id" name="productid" readonly="" required="">
+    </div>
+    <div class="form-group">
+      <label for="quantity">Quantity:</label>
+      <input type="number" class="form-control" value="{{this.id}}" id="quantity" placeholder="1" name="pswd" required="">
+    </div>
+    <div class="form-group">
+    <button type="submit" class="btn btn-danger">Submit</button>
+  </form>
+</div>
