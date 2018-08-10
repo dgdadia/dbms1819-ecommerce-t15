@@ -52,17 +52,16 @@
 						<h4 class="card-title">{{product_brand}}</h4>
 						<h6 class="card-title">{{product_description}} </h6>
 						<h5 class="card-title">₱ {{product_price}}.00</h5>
-
-
 						
 					</div>
-					<a href="/form" style="float:right" class="btn btn-lg btn-design" role="button">Order Now!</button>
-
+					
 			</div>
+			<a href="/form" style="float:left" class="btn btn-lg btn-design" role="button">Order Now!</a>
+
 			<form action="/update/products" method="POST">
-	<input type="hidden" name="product_id" value="{{product_id}}">
-	<input class="btn btn-lg from-update-button" style="float:right" type="submit" name="" value="update">		
-</form>	
+			<input type="hidden" name="product_id" value="{{product_id}}">
+			<input class="btn btn-lg btn-design  " style="float:right" role="button" type="submit" name="" value="UPDATE">		
+			</form>	
 		</div>
 
 
