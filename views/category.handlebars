@@ -6,14 +6,23 @@
 </style>
 
 <div class="container">
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">NO.</th>
+      <th scope="col">CATEGORY</th>
+    </tr>
+  </thead>
+  <tbody>
+  	{{#each rows}}
+    <tr>
+      <th scope="row">{{this.id}}</th>
+      <td>{{this.name}}</td>
+    {{/each}}
+    </tr>
+  </tbody>
+</table>
 
-<h3> Category List </h3>
-
-
-{{#each rows}}
-
-<li> {{this.name}} </li>
-
-{{/each}}
-
+  </tbody>
+</table>
 </div>

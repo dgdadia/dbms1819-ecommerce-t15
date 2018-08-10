@@ -8,18 +8,16 @@
 <div class="container">
 <table class="table">
   <thead class="thead-dark">
-    <tr style="font-size: 25px;">
+    <tr>
       <th scope="col">NO.</th>
-      <th scope="col">BRAND</th>
-      <th scope="col">DESCRIPTION</th>
+      <th scope="col">CUSTOMER</th>
     </tr>
   </thead>
   <tbody>
   	{{#each rows}}
     <tr>
       <th scope="row">{{this.id}}</th>
-      <td>{{this.brand_name}}</td>
-      <td>{{this.brand_description}}</td>
+      <td>{{this.name}}</td>
     {{/each}}
     </tr>
   </tbody>

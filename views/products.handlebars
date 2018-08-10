@@ -1,5 +1,5 @@
 <style>
-  	@import url('https://fonts.googleapis.com/css?family=Homemade Apple');
+    @import url('https://fonts.googleapis.com/css?family=Homemade Apple');
 	@import url('https://fonts.googleapis.com/css?family=Poppins');
 	@import url('https://fonts.googleapis.com/css?family=Khand');
 
@@ -21,15 +21,41 @@ a:hover{
 }
 </style>
 	
-	<div class="jumbotron mt-2">
-		<div class="row mx-4">
-			{{#each data}}
+
+<!--<div class="jumbotron mt-4">
+		<div class="row mx-6">
+		{{#each data}}
+
 			<div class="col-lg-4 col-md-4 col-sm-12 mb-4 mx-auto">
+
 				<div class="card center">
 					<a href="/products/{{this.id}}"><br>
 						<img class="card-img-top" src="{{this.image}}">
 						<div class="text-box">
-								<h5 class="card-title text-center my-3">{{this.brand}} <br>{{this.name}}</h5>
+
+					<h3 class="card-title text-center">{{this.brands}}</h3><br> {{this.name}}</h5>
+							<h5 class="card-title">₱ {{this.price}}.00</h5>
+						<p class="card-text">
+							<h7 class="card-title">{{this.products_category}}</h7>
+						</p>
+							<h7 class="card-title">{{this.description}}</h7>
+					</div>
+				</div>
+			</div>
+		{{/each}}
+	</div>
+</div>-->
+<div class="jumbotron mt-0">
+		<div class="row mx-5">
+			{{#each data}}
+			<div class="col-lg-5 col-md-4 col-sm-4 mb-4">
+				<div class="card center">
+					<a href="/products/{{this.id}}"><br>
+						<img class="card-img-top" src="{{this.image}}">
+						<div class="text-box">
+								<h5 class="card-title text-center my-3">{{this.brand}} <br> {{this.name}}</h5>
+									<h5 class="card-title text-center">₱ {{this.price}}.00</h5>
+									
 						</div>
 					</a>
 				</div>

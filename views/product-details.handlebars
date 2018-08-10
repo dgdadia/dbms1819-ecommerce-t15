@@ -42,22 +42,30 @@
 </style>
 <body>
 <div class="container">
-		{{#each data}}
 			<a href="/products" class="btn btn-danger btn-lg" role="button" style="float: right">BACK</a>
 			<div class="col-lg-8 col-md-8 col-sm-8 mb-0 mx-auto">
 				<div class="card center">
-					<img class="card-img-top" src="{{this.photo}}" alt="{{this.name}}">
+					<img class="card-img-top" src="{{product_image}}" alt="{{product_name}}">
 					<div class="card-body">
-						<h4 class="card-title">{{this.brand}} </h4>
-						<h4 class="card-title">{{this.name}}</h4>
-						<h6 class="card-title">{{this.description}} </h6>
-						<h5 class="card-title">₱ {{this.price}}.00</h5>
+
+						<h4 class="card-title">{{product_name}} </h4>
+						<h4 class="card-title">{{product_brand}}</h4>
+						<h6 class="card-title">{{product_description}} </h6>
+						<h5 class="card-title">₱ {{product_price}}.00</h5>
+
+
 						
-						<a href="/form" style="float:right" class="btn btn-lg btn-design" role="button">Order Now!</button></h7>
 					</div>
+					<a href="/form" style="float:right" class="btn btn-lg btn-design" role="button">Order Now!</button>
+
 			</div>
-		{{/each}}
+			<form action="/update/products" method="POST">
+	<input type="hidden" name="product_id" value="{{product_id}}">
+	<input class="btn btn-lg from-update-button" style="float:right" type="submit" name="" value="update">		
+</form>	
 		</div>
+
+
 	</div>
 </body>
 
