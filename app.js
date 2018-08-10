@@ -47,11 +47,64 @@ app.get('/', function(req, res) {
 	});
 });
 
+app.get('/customers', function(req, res) {
+	res.render('customers',{
+
+	});
+});
+
+app.get('/customer/:id', function(req, res) {
+	res.render('customer-details',{
+
+	});
+});
+
+app.get('/orders', function(req, res) {
+	res.render('orders',{
+
+	});
+});
+
 app.get('/product/add', function(req, res) {
 	res.render('add-product',{
 
 	});
 });
+
+app.get('/update/products/:id', function(req, res) {
+	client.query('SELECT * FROM products WHERE id = $1',[req.params.id], (err,data)=>{
+		client.query('SELECT * from brands',(err2,databrands)=>{
+			client.query('SELECT * FROM products_category', (err3,datacategory)=>{
+				res.render('update-products',{
+					product_name: data.rows[0].name,
+					product_id: data.rows[0].id,
+					product_description: data.rows[0].description,
+					product_tagline: data.rows[0].tagline,
+					product_price: data.rows[0].price,
+					product_warranty: data.rows[0].warranty,
+					product_brand_id: data.rows[0].brand_id,
+					product_category_id: data.rows[0].category_id,
+					brands: databrands.rows,
+					categories: datacategory.rows
+				})
+			})
+		})
+	})
+	
+
+});
+
+
+app.post('/update/product/form', function(req,res){
+	const query = {
+		text: 'UPDATE products SET name = $1, description = $2, tagline = $3, price = $4, warranty = $5, brand_id = $6, category_id = $7 WHERE id = $8',
+		values: [req.body.product_name,req.body.product_description,req.body.product_tagline,req.body.product_price,req.body.product_warranty,req.body.product_brand,req.body.product_category,req.body.product_id]
+	}
+	console.log(query);
+	client.query(query,(req,data)=>{
+		res.redirect('/products');
+	})
+})
 
 app.get('/brand/create', function(req, res) {
 	res.render('create-brand',{
@@ -138,6 +191,16 @@ app.get('/form', function(req, res) {
 	res.redirect('/products');
 });
 
+
+
+
+app.post('/update/products', function(req,res){
+	id = req.body.product_id;
+	console.log(id)
+	res.redirect('/update/products/'+id);
+	
+})
+
 app.get('/product/create', function(req, res) {
 	 var category = []; 
 	 var brand = [];
@@ -192,16 +255,23 @@ app.get('/products',(req,res)=>{
 
 app.get('/products/:id', (req,res)=>{
 	var id = req.params.id;
-	client.query('SELECT * FROM products', (req, data)=>{
-		var list = [];
-		for (var i = 0; i < data.rows.length+1; i++) {
-			if (i==id) {
-				list.push(data.rows[i-1]);
-			}
-		}
-		res.render('products',{
-			data: list
+	client.query('SELECT * FROM products WHERE id = $1', [id], (req, data)=>{
+		client.query('SELECT * FROM brands WHERE id = $1',[data.rows[0].brand_id],(err,data2)=>{
+
+		res.render('product-details',{
+			product_name: data.rows[0].name,
+			product_id: data.rows[0].id,
+			product_description: data.rows[0].description,
+			product_tagline: data.rows[0].tagline,
+			product_price: data.rows[0].price,
+			product_warranty: data.rows[0].warranty,
+			product_brand_id: data.rows[0].brand_id,
+			product_category_id: data.rows[0].category_id,
+			product_image: data.rows[0].image,
+			product_brand: data2.rows[0].brand_name
 		});
+
+		})
 	});
 });
 
