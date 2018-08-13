@@ -1,28 +1,33 @@
-<<style>
+<style> 
 .container{
-  background-color: pink;
-  margin-top: 100px;
+  background-color: lightpink;
+  margin-top: 50px;
 }
 </style>
+
 
 <div class="container">
 <table class="table">
   <thead class="thead-dark">
-    <tr>
-      <th scope="col">NO.</th>
-      <th scope="col">CUSTOMER</th>
-    </tr>
-  </thead>
-  <tbody>
-  	{{#each rows}}
-    <tr>
-      <th scope="row">{{this.id}}</th>
-      <td>{{this.name}}</td>
-    {{/each}}
-    </tr>
-  </tbody>
-</table>
+             <th>First Name</th>
+              <th>Middle Name</th>
+              <th>Last Name</th>
+              <th>Email Address</th>
+              <th>Customer Details</th>
 
-  </tbody>
-</table>
-</div>
+      </tr>
+     {{#each rows}}
+          <tbody>
+            <tr>
+              <td>{{this.first_name}}</td>
+              <td>{{this.middle_name}}</td>
+              <td>{{this.last_name}}</td>
+              <td>{{this.email}}</td>
+              <td>
+                <a href="/customers/{{this.id}}">More details&nbsp;&raquo;</a>
+              </td>
+            </tr>
+          </tbody>
+          {{/each}}
+        </table>
+      </div>
