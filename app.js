@@ -234,8 +234,6 @@ app.get('/product/create', function(req, res) {
 
 
 
-
-
 // connect to database
 app.get('/products',(req,res)=>{
 	
@@ -288,61 +286,131 @@ app.get('/products/:id', (req,res)=>{
 
 
 
-app.post('/products/:id/send', function(req, res) {
+// app.post('/products/:id/send', function(req, res) {
+// 	console.log(req.body);
+// 	var id = req.params.id;
+// 	const output = `
+// 		<p>You have a new contact request</p>
+// 		<h3>Contact Details</h3>
+// 		<ul>
+// 			<li>Customer Name: ${req.body.name}</li>
+// 			<li>Phone: ${req.body.phone}</li>
+// 			<li>Email: ${req.body.email}</li>
+// 			<li>Product ID: ${req.body.productid}</li>
+// 			<li>Quantity ${req.body.quantity}</li>
+// 		</ul>
+// 	`;
+
+	app.post('/products/:id/send', function(req, res) {
+	client.query("INSERT INTO customers (email, first_name, middle_name, last_name, state, city, street, zipcode) VALUES ('" + req.body.email + "', '" + req.body.first_name + "', '" + req.body.middle_name + "', '" + req.body.last_name + "', '" + req.body.state + "', '" + req.body.city + "', '" + req.body.street + "', '" + req.body.zipcode + "') ON CONFLICT (email) DO UPDATE SET first_name = ('" + req.body.first_name + "'), middle_name = ('" + req.body.middle_name + "'), last_name = ('" + req.body.last_name + "'), state = ('"+req.body.state+"'), city = ('"+req.body.city+"'), street = ('"+req.body.street+"'), zipcode = ('"+req.body.zipcode+"') WHERE customers.email ='"+req.body.email+"';");
 	console.log(req.body);
-	var id = req.params.id;
-	const output = `
-		<p>You have a new contact request</p>
-		<h3>Contact Details</h3>
-		<ul>
-			<li>Customer Name: ${req.body.name}</li>
-			<li>Phone: ${req.body.phone}</li>
-			<li>Email: ${req.body.email}</li>
-			<li>Product ID: ${req.body.productid}</li>
-			<li>Quantity ${req.body.quantity}</li>
-		</ul>
-	`;
+
+	client.query("SELECT id FROM customers WHERE email = '" + req.body.email + "';")	
+	.then((results)=>{
+		var id = results.rows[0].id;
+		console.log(id);
+		client.query("INSERT INTO orders (product_id,customer_id,quantity) VALUES (" + req.params.id + ", " + id + ", " + req.body.quantity + ")")
+		
+		.then((results)=>{
+			var maillist = ['dbmsteam15@gmail.com', req.body.email];
+			var transporter = nodemailer.createTransport({
+		        host: 'smtp.gmail.com',
+		        port: 465,
+		        secure: true,
+		        auth: {
+		            user: 'dbmsteam15@gmail.com', 
+		            pass: 'team15@dbms' 
+		        }
+		    });
+		    const mailOptions = {
+		    	from: '"Team 15" <dbmsteam15@gmail.com>',
+		    	to: maillist,
+		    	subject: 'Order Request Information',
+		    	html: 
+
+		    			'<table>' +	
+		    				'<thead>' +
+		    					'<tr>' +
+		    						'<th>Customer</th>' +
+		    						'<th>Name</th>' +
+		    						'<th>Email</th>' +
+		    						'<th>Product</th>' +
+		    						'<th>Quantity</th>' +
+		    					'</tr>' +
+		    				'<thead>' +
+		    				'<tbody>' +
+		    					'<tr>' +
+		    						'<td>' + req.body.first_name + '</th>' +
+		    						'<td>' + req.body.last_name + '</td>' +
+		    						'<td>' + req.body.email + '<td>' +
+		    						'<td>' + req.body.products_name + '</td>' +
+		    						'<td>' + req.body.quantity + '</td>' +
+		    					'</tr>' +
+		    				'</tbody>' +
+		    			'</table>' 
+		    };
+
+			transporter.sendMail(mailOptions, (error,info) => {
+		    	if (error) {
+		    		return console.log(error);
+		    	}
+		    	console.log('Message %s sent: %s', info.messageId, info.response);
+		    	res.redirect('/products');
+	   		});
+		})
+		.catch((err)=>{
+			console.log('error',err),
+			res.send('Error!');
+		});
+
+    })
+    .catch((err)=>{
+    	console.log('error',err),
+    	res.send('Error!');
+    });
+});
+
 
 	//nodemailer
-	let transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        auth: {
-            user: 'dbmsteam15@gmail.com', 
-            pass: 'team15@dbms' 
-        }
-    });
+// 	let transporter = nodemailer.createTransport({
+//         host: 'smtp.gmail.com',
+//         port: 465,
+//         secure: true,
+//         auth: {
+//             user: 'dbmsteam15@gmail.com', 
+//             pass: 'team15@dbms' 
+//         }
+//     });
 
-    let mailOptions = {
-        from: '"Makeup Mailer" <dbmsteam15@gmail.com>',
-        to: 'danicadadia.dd@gmail.com, romardizon27@gmail.com',
-        subject: 'My Makeup World Order Request',
-        //text: req.body.name,
-        html: output
-    };
+//     let mailOptions = {
+//         from: '"Makeup Mailer" <dbmsteam15@gmail.com>',
+//         to: 'danicadadia.dd@gmail.com, romardizon27@gmail.com',
+//         subject: 'My Makeup World Order Request',
+//         //text: req.body.name,
+//         html: output
+//     };
 
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            return console.log(error);
-        }
-        console.log('Message sent: %s', info.messageId);
-        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+//     transporter.sendMail(mailOptions, (error, info) => {
+//         if (error) {
+//             return console.log(error);
+//         }
+//         console.log('Message sent: %s', info.messageId);
+//         console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
-        client.query('SELECT * FROM products', (req, data)=>{
-			var list = [];
-			for (var i = 0; i < data.rows.length+1; i++) {
-				if (i==id) {
-					list.push(data.rows[i-1]);
-				}
-			}
-			res.render('form',{
-				data: list,
-				msg: '---Email has been sent---'
-			});
-		});
-     });
-});
+//         client.query('SELECT * FROM products', (req, data)=>{
+// 			var list = [];
+// 			for (var i = 0; i < data.rows.length+1; i++) {
+// 				if (i==id) {
+// 					list.push(data.rows[i-1]);
+// 				}
+// 			}
+// 			res.render('form',{
+// 				data: list,
+// 				msg: '---Email has been sent---'
+// 			});
+// 		});
+//      });
+// });
 
 
 //Server
