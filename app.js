@@ -76,7 +76,8 @@ app.post('/products/:id/forms', function(req, res) {
 	.then((results)=>{
 		console.log ('results?',results);
 		res.render('form',{
-			name: results.rows[0].name
+			name: results.rows[0].name,
+			id: results.rows[0].id
 		})
 	})
 	.catch((err) => {
@@ -313,7 +314,7 @@ app.get('/products/:id', (req,res)=>{
 // 		</ul>
 // 	`;
 
-	app.post('/products/:id/send', function(req, res) {
+	app.post('/products/:id/forms/send', function(req, res) {
 	client.query("INSERT INTO customers (email, first_name, middle_name, last_name, state, city, street, zipcode) VALUES ('" + req.body.email + "', '" + req.body.first_name + "', '" + req.body.middle_name + "', '" + req.body.last_name + "', '" + req.body.state + "', '" + req.body.city + "', '" + req.body.street + "', '" + req.body.zipcode + "') ON CONFLICT (email) DO UPDATE SET first_name = ('" + req.body.first_name + "'), middle_name = ('" + req.body.middle_name + "'), last_name = ('" + req.body.last_name + "'), state = ('"+req.body.state+"'), city = ('"+req.body.city+"'), street = ('"+req.body.street+"'), zipcode = ('"+req.body.zipcode+"') WHERE customers.email ='"+req.body.email+"';");
 	console.log(req.body);
 
