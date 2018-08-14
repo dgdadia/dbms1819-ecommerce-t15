@@ -76,8 +76,7 @@ app.post('/products/:id/forms', function(req, res) {
 	.then((results)=>{
 		console.log ('results?',results);
 		res.render('form',{
-			name: results.rows[0].name,
-			id: results.rows[0].id
+			name: results.rows[0].name
 		})
 	})
 	.catch((err) => {
