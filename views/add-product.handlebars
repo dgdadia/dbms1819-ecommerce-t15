@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <style>
 .container{
   background-color: pink;
@@ -56,62 +55,3 @@
     <input type="submit" class="btn btn-lg btn-danger" name="submit" value="Submit">
   </form>
 </div>
-=======
-<style>
-.container{
-  background-color: pink;
-  margin-top: 100px;
-  margin: auto;
-
-}
-</style>
-
-<div class="container">
-  <h2>ADD PRODUCT</h2>
-  <form action="/addproduct" method="POST">
-
-    <div class="form-group">
-      <label for="name">NAME:</label>
-      <input type="text" class="form-control" id="product_name" name="product_name" required="">
-    </div>
-     <div class="form-group">
-       <label for="exampleTextarea">DESCRIPTION:</label>
-      <textarea class="form-control"  id="product_description" rows="3" name="product_description"required=""></textarea>
-    </div>
-    <div class="form-group">
-      <label for="tagline">TAGLINE:</label>
-      <input type="text" class="form-control"  id="product_tagline" name="product_tagline"  required="">
-    </div>
-        <div class="form-group">
-      <label for="price">PRICE:</label>
-      <input type="text" class="form-control"  id="product_price" name="product_price"  required="">
-    </div>
-        <div class="form-group">
-      <label for="warranty">WARRANTY:</label>
-      <input type="text" class="form-control"  id="product_warranty" name="product_warranty"  required="">
-    </div>
-     <div class="form-group">
-      <label for="brand_id">BRAND:</label>
-      <select type="text" class="form-control" id="product_brand" name="product_brand" required>
-        {{#each rows.[0]}}
-          <option value="{{this.id}}">{{this.brand_name}}</option>
-        {{/each}}
-      </select>
-    </div>
-     <div class="form-group">
-      <label for="category_id">CATEGORY:</label>
-      <select type="text" class="form-control" id="product_category" name="product_category" required>
-      {{#each rows.[1]}}
-      <option value="{{this.id}}">{{this.name}}</option>
-      {{/each}}
-    </select>
-    </div>
-    <div class="form-group">
-      <label for="quantity">IMAGE:</label>
-      <input type="text" class="form-control"  id="product_image" name="product_image" required="">
-    </div><br>
-    <div class="form-group">
-    <input type="submit" class="btn btn-lg btn-danger" name="submit" value="Submit">
-  </form>
-</div>
->>>>>>> fc4bcf998ca7ec96f6e83a58d0085032e6623c54
