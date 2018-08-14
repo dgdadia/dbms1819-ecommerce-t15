@@ -111,7 +111,7 @@ app.get('/products/:id/forms', function(req, res) {
 		console.log('error',err);
 		res.send('Error!');
 	});
-}
+});
 
 app.get('/product/add', function(req, res) {
 	res.render('add-product',{
