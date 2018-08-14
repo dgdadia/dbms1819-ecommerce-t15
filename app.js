@@ -76,6 +76,8 @@ app.get('/products/:id/forms', function(req, res) {
 	.then((results)=>{
 		console.log ('results?',results);
 		res.render('form',{
+			id: results.rows[0].id
+		})
 	})
 	.catch((err) => {
 		console.log('error',err);
