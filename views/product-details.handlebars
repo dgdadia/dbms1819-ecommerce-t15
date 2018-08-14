@@ -42,8 +42,9 @@
 </style>
 <body>
 <div class="container">
-			<a href="/products" class="btn btn-danger btn-lg" role="button" style="float: right">BACK</a>
+			{{!-- <a href="/products" class="btn btn-danger btn-lg" role="button" style="float: right">BACK</a> --}}
 			<div class="col-lg-8 col-md-8 col-sm-8 mb-0 mx-auto">
+				<form  action="{{product_id}}/forms" method="POST">
 				<div class="card center">
 					<img class="card-img-top" src="{{product_image}}" alt="{{product_name}}">
 					<div class="card-body">
@@ -56,12 +57,12 @@
 					</div>
 					
 			</div>
-			<a href="{{product_id}}/forms" style="float:left" class="btn btn-lg btn-design" role="button">Order Now!</a>
-
-			<form action="/update/products" method="POST">
-			<input type="hidden" name="product_id" value="{{product_id}}">
-			<input class="btn btn-lg btn-design  " style="float:right" role="button" type="submit" name="" value="UPDATE">		
-			</form>	
+			<button {{!-- href="{{product_id}}/forms" --}} style="float:left" class="btn btn-lg btn-design" type="submit" role="button">Order Now!</button>
+		</form>
+			{{!-- <form action="/update/products" method="POST"> --}}
+			{{!-- <input type="hidden" name="product_id" value="{{product_id}}"> --}}
+			<a href="/update/products/{{product_id}}"><button class="btn btn-lg btn-design  " style="float:right" role="button" type="submit" name="" value="UPDATE">UPDATE</button></a>
+			{{!-- </form>	 --}}
 		</div>
 
 
