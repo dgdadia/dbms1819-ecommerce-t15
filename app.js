@@ -71,6 +71,48 @@ app.get('/orders', function(req, res) {
 	});
 });
 
+app.get('/products/:id/forms', function(req, res) {
+	var category = [];
+	var brand = [];
+	var product = [];
+	var both = [];
+	client.query('SELECT * FROM products_category')
+	.then((result)=>{
+		category = result.rows;
+		console.log('category:', category);
+		both.push(category);
+	})
+	.catch((err) => {
+		console.log('error',err);
+		res.send('Error!');
+	});
+	client.query('SELECT * FROM brands')
+	.then((result)=>{
+		brand = result.rows;
+		console.log('brand:', brand);
+		both.push(brand);
+	})
+	.catch((err) => {
+		console.log('error',err);
+		res.send('Error!');
+	});
+	client.query('SELECT products.id AS id, products.name AS name, products.category_id AS category_id, products.brand_id AS brand_id, products.price AS price, products.description AS description, products.tagline AS tagline, products.image AS image, products.warranty AS warranty FROM products LEFT JOIN brands ON products.brand_id=brands.id RIGHT JOIN categories ON products.category_id=products_category.id WHERE products.id = '+req.params.id+';')
+	.then((result)=>{
+		product = result.rows[0];
+		both.push(product);
+		console.log(product);
+		console.log(both);
+		res.render('update_product', {
+			rows: result.rows[0],
+			brand: both
+		});
+	})
+	.catch((err) => {
+		console.log('error',err);
+		res.send('Error!');
+	});
+}
+
 app.get('/product/add', function(req, res) {
 	res.render('add-product',{
 
