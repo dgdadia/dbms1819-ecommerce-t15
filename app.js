@@ -72,11 +72,12 @@ app.get('/orders', function(req, res) {
 });
 
 app.post('/products/:id/forms', function(req, res) {
-	client.query('SELECT products.name AS name FROM products LEFT JOIN brands ON products.brand_id=brands.id RIGHT JOIN products_category ON products.category_id=products_category.id WHERE products.id = '+req.params.id+';')
+	client.query('SELECT products.name AS name, products.id AS id FROM products LEFT JOIN brands ON products.brand_id=brands.id RIGHT JOIN products_category ON products.category_id=products_category.id WHERE products.id = '+req.params.id+';')
 	.then((results)=>{
 		console.log ('results?',results);
 		res.render('form',{
 			name: results.rows[0].name
+			id: results.rows[0].id
 		})
 	})
 	.catch((err) => {
