@@ -1,0 +1,28 @@
+<<style>
+.container{
+  background-color: pink;
+  margin-top: 100px;
+}
+</style>
+
+<div class="container">
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">NO.</th>
+      <th scope="col">CUSTOMER</th>
+    </tr>
+  </thead>
+  <tbody>
+  	{{#each rows}}
+    <tr>
+      <th scope="row">{{this.id}}</th>
+      <td>{{this.name}}</td>
+    {{/each}}
+    </tr>
+  </tbody>
+</table>
+
+  </tbody>
+</table>
+</div>

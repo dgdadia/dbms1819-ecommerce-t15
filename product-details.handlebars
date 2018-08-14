@@ -1,0 +1,71 @@
+<style>
+  	@import url('https://fonts.googleapis.com/css?family=Homemade Apple');
+	@import url('https://fonts.googleapis.com/css?family=Poppins');
+.header1{
+	font-size: 125%;
+	color: black;
+	text-shadow: 300px 300px 300px #f9e6ff;
+	margin-bottom: 5%;
+	font-family: 'Poppins', sans-serif;
+}
+.card{
+	background: #FF1493;
+	margin-top: 20px;
+}
+.card-body{
+	color: white;
+}
+.header-design{
+	background-color: #FF1493;
+	color: white;
+	font-style: bold;
+}
+.body-design{
+	background: #FFC0CB;
+}
+.btn-design{
+	background-color:#FFC0CB ;
+	border-color:#FF1493;
+	color: white;
+}
+.btn-design:hover{
+	background-color: #FFC0CB;
+	border-color: #FF1493;
+	color: white;
+}
+.lbl-text{
+	color:white;
+	font-style: bold;
+	text-transform: capitalize;
+}
+
+</style>
+<body>
+<div class="container">
+			<a href="/products" class="btn btn-danger btn-lg" role="button" style="float: right">BACK</a>
+			<div class="col-lg-8 col-md-8 col-sm-8 mb-0 mx-auto">
+				<div class="card center">
+					<img class="card-img-top" src="{{product_image}}" alt="{{product_name}}">
+					<div class="card-body">
+
+						<h4 class="card-title">{{product_name}} </h4>
+						<h4 class="card-title">{{product_brand}}</h4>
+						<h6 class="card-title">{{product_description}} </h6>
+						<h5 class="card-title">₱ {{product_price}}.00</h5>
+						
+					</div>
+					
+			</div>
+			<a href="/form" style="float:left" class="btn btn-lg btn-design" role="button">Order Now!</a>
+
+			<form action="/update/products" method="POST">
+			<input type="hidden" name="product_id" value="{{product_id}}">
+			<input class="btn btn-lg btn-design  " style="float:right" role="button" type="submit" name="" value="UPDATE">		
+			</form>	
+		</div>
+
+
+	</div>
+</body>
+
+

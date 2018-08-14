@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <link href='https://fonts.googleapis.com/css?family=Khand' rel='stylesheet'>
 <style>
 	.card {
@@ -71,4 +72,79 @@
  		
  		</div>
  	</body>
+=======
+<link href='https://fonts.googleapis.com/css?family=Khand' rel='stylesheet'>
+<style>
+	.card {
+  max-width: 500px;
+  margin: auto;
+  margin-top: 50px;
+  text-align: center;
+  font-family: Calligrapher;
+  color: black;
+  background-image: linear-gradient(blue, skyblue,lightblue,blue);
+  font-size: 25px;
+}
+.center
+{
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+.name
+{
+	font-style: bold;
+}
+.email
+{
+	color: blue;
+	font-style: italic;
+}
+.phone
+{
+	color: red;
+}
+.hobbies
+{
+	font-size: 30px;
+}
+.list
+{
+	margin: auto;
+	text-align: center;
+}
+}
+</style>
+ 		<title>My Express App</title>
+ 	</head>
+ 	<body>
+ 		<div class ="card">
+ 		<Label><h1>MY PROFILE</h1></Label><br>
+ 			<div class = "center">
+			<img width="200pt" height="200pt"src= "{{imageurl}}"><br>
+			</div>
+		<div class="name">
+		<Label>Name: {{name}}</Label>
+		</div>
+		<div class="email">
+		<Label>Email: {{email}}</Label><br>
+		</div>
+		<div class="phone">
+		<Label>Phone: {{phone}}</Label><br>
+		</div>
+		<div class = "hobbies"> 
+		<Label>Hobbies</Label>
+		</div>
+		<div class="list">
+		<ul>
+			{{#each hobbies}}
+			<li>{{this}}</li>
+			{{/each}}
+		</ul>
+		</div>
+ 		
+ 		</div>
+ 	</body>
+>>>>>>> fc4bcf998ca7ec96f6e83a58d0085032e6623c54
 	</div>

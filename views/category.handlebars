@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <style>
 .container{
   background-color: pink;
@@ -25,4 +26,54 @@
 
   </tbody>
 </table>
+=======
+<!--<style>
+.container{
+  background-color: pink;
+  margin-top: 100px;
+}
+</style>
+
+<div class="container">
+
+<h3> Category List </h3>
+
+
+{{#each rows}}
+
+<li> {{this.name}} </li>
+
+{{/each}}
+
+</div>-->
+
+
+<<style>
+.container{
+  background-color: pink;
+  margin-top: 100px;
+}
+</style>
+
+<div class="container">
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">NO.</th>
+      <th scope="col">CATEGORY</th>
+    </tr>
+  </thead>
+  <tbody>
+  	{{#each rows}}
+    <tr>
+      <th scope="row">{{this.id}}</th>
+      <td>{{this.name}}</td>
+    {{/each}}
+    </tr>
+  </tbody>
+</table>
+
+  </tbody>
+</table>
+>>>>>>> fc4bcf998ca7ec96f6e83a58d0085032e6623c54
 </div>
