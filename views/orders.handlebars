@@ -1,12 +1,3 @@
-<style>
-.container{
-   background-color: lightpink;
-  margin-top: 100px;
-  margin: auto;
-  color: darkgoldenrod;
-}
-</style>
-
 <div class="container">
 <table class="table">
   <thead class="thead-dark">
@@ -20,7 +11,7 @@
               <th>Purchase Date</th>
             </tr>
           </thead>
-          {{#each rows}}
+          {{#each result}}
           <tbody>
             <tr>
               <td>{{this.first_name}}</td>

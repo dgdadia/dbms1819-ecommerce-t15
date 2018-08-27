@@ -36,214 +36,14 @@ app.use(express.static(path.join(__dirname, 'bower_components')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// Client
+
 app.get('/', function (req, res) {
   res.render('home', {
 
   });
 });
 
-app.get('/customers', function (req, res) {
-  client.query('SELECT * FROM customers ORDER BY id DESC')
-    .then((result) => {
-      console.log('results?', result);
-      res.render('customers', result);
-    })
-    .catch((err) => {
-      console.log('error', err);
-      res.send('Error!');
-    });
-});
-
-app.get('/customers/:id', function (req, res) {
-  client.query("SELECT customers.first_name AS first_name, customers.middle_name AS middle_name, customers.last_name AS last_name, customers.email AS email, customers.state AS state, customers.city AS city, customers.street AS street, customers.zipcode AS zipcode, products.name AS product_name, orders.quantity AS quantity, orders.purchase_date AS purchase_date FROM orders INNER JOIN customers ON orders.customer_id=customers.id INNER JOIN products ON orders.product_id=products.id WHERE customers.id = '" + req.params.id + "' ORDER BY purchase_date DESC;")
-    .then((result) => {
-      console.log('results?', result);
-      res.render('customer-details', result);
-    })
-    .catch((err) => {
-      console.log('error', err);
-      res.send('Error!');
-    });
-});
-
-app.get('/orders', function (req, res) {
-  client.query('SELECT customers.first_name AS first_name, customers.middle_name AS middle_name, customers.last_name AS last_name, customers.email AS email, products.name AS products_name, orders.purchase_date AS purchase_date, orders.quantity AS quantity FROM orders INNER JOIN products ON orders.product_id=products.id INNER JOIN customers ON orders.customer_id=customers.id ORDER BY purchase_date DESC;')
-    .then((result) => {
-      console.log('results?', result);
-      res.render('orders', result);
-    })
-    .catch((err) => {
-      console.log('error', err);
-      res.send('Error!');
-    });
-});
-
-app.post('/products/:id/forms', function (req, res) {
-  client.query('SELECT products.name AS name, products.id AS id FROM products LEFT JOIN brands ON products.brand_id=brands.id RIGHT JOIN products_category ON products.category_id=products_category.id WHERE products.id = ' + req.params.id + ';')
-    .then((results) => {
-      console.log('results?', results);
-      res.render('form', {
-        name: results.rows[0].name
-      });
-    })
-    .catch((err) => {
-      console.log('error', err);
-      res.send('Error!');
-    });
-});
-
-app.get('/product/add', function (req, res) {
-  res.render('add-product', {
-
-  });
-});
-
-app.get('/update/products/:id', function (req, res) {
-  client.query('SELECT * FROM products WHERE id = $1', [req.params.id], (err, data) => {
-    if (err) {}
-    client.query('SELECT * from brands', (err2, databrands) => {
-      client.query('SELECT * FROM products_category', (err3, datacategory) => {
-        res.render('update-products', {
-          product_name: data.rows[0].name,
-          product_id: data.rows[0].id,
-          product_description: data.rows[0].description,
-          product_tagline: data.rows[0].tagline,
-          product_price: data.rows[0].price,
-          product_warranty: data.rows[0].warranty,
-          product_brand_id: data.rows[0].brand_id,
-          product_category_id: data.rows[0].category_id,
-          brands: databrands.rows,
-          categories: datacategory.rows
-        });
-      });
-    });
-  });
-});
-
-app.post('/update/product/form', function (req, res) {
-  const query = {
-    text: 'UPDATE products SET name = $1, description = $2, tagline = $3, price = $4, warranty = $5, brand_id = $6, category_id = $7 WHERE id = $8',
-    values: [req.body.product_name, req.body.product_description, req.body.product_tagline, req.body.product_price, req.body.product_warranty, req.body.product_brand, req.body.product_category, req.body.product_id]
-  };
-  console.log(query);
-  client.query(query, (req, data) => {
-    res.redirect('/products');
-  });
-});
-
-app.get('/brand/create', function (req, res) {
-  res.render('create-brand', {
-
-  });
-});
-
-app.get('/category/create', function (req, res) {
-  res.render('create-category', {
-
-  });
-});
-
-app.post('/brand/create/saving', function (req, res) {
-  console.log(req.body);
-  client.query("INSERT INTO brands (brand_name, brand_description) VALUES ('" + req.body.brand_name + "', '" + req.body.brand_description + "')");
-  res.redirect('/brand');
-});
-
-app.get('/brand', function (req, res) {
-  client.query('SELECT * FROM brands')
-    .then((result) => {
-      console.log('results?', result);
-      res.render('brand', result);
-    })
-    .catch((err) => {
-      console.log('error', err);
-      res.send('Error!');
-    });
-});
-
-app.post('/category/create/saving', function (req, res) {
-  console.log(req.body);
-  client.query("INSERT INTO products_category (name) VALUES ('" + req.body.name + "')");
-  res.redirect('/category');
-});
-
-app.get('/category', function (req, res) {
-  client.query('SELECT * FROM products_category')
-    .then((result) => {
-      console.log('results?', result);
-      res.render('category', result);
-    })
-    .catch((err) => {
-      console.log('error', err);
-      res.send('Error!');
-    });
-});
-
-app.get('/member1', function (req, res) {
-  res.render('members', {
-    name: 'Romar Dizon',
-    email: 'romardizon27@gmail.com',
-    phone: '09213309976',
-    imageurl: 'https://scontent.fmnl4-4.fna.fbcdn.net/v/t1.0-9/15284927_1275474115852962_685390893495489160_n.jpg?_nc_cat=0&_nc_eui2=AeHCALjlEfR9s5Pouq9YJJQDWG3Hy6mo1REBqs48K1kNT0d_tMukn5-RE1iw3NBxkFiMnKYdXQUHQ11RDborwINnmCWWV8GtJipg5gsY73u7iw&oh=681069f3182f2d5961ab81639570f4e8&oe=5BC8995F',
-    hobbies: ['Playing Basketball', 'Playing Badminton', 'Playing Dota', 'Watching Movies', 'Dancing']
-
-  });
-});
-
-app.get('/member2', function (req, res) {
-  res.render('members', {
-    name: 'Danica Dadia',
-    email: 'danicadadia.dd@gmail.com',
-    phone: '09297567752',
-    imageurl: 'https://scontent.fmnl4-4.fna.fbcdn.net/v/t1.0-9/26229420_2164092686964723_3022482758723077958_n.jpg?_nc_cat=0&_nc_eui2=AeHuBXDXg38sC4JhAEnnlFggZE4VngC4GqR8GpT9Mgzaq4_1p8gjo2M23vhAjZ1ctPLULalQ7r0CKnBEFbdY0U5aMz1GRBdp6P-Cjc7himBN9w&oh=cc12724b1e7da212bf7f1e2a379bbfd4&oe=5BFF378E',
-    hobbies: ['Watching Movies', 'Dancing', 'Makeup']
-
-  });
-});
-
-app.post('/addproduct', function (req, res) {
-  console.log(req.body);
-  client.query("INSERT INTO products (name, description, tagline, price, warranty, brand_id, category_id, image) VALUES ('" + req.body.product_name + "', '" + req.body.product_description + "', '" + req.body.product_tagline + "', '" + req.body.product_price + "', '" + req.body.product_warranty + "', '" + req.body.product_brand + "', '" + req.body.product_category + "','" + req.body.product_image + "')");
-  res.redirect('/products');
-});
-
-app.post('/update/products', function (req, res) {
-  var id = req.body.product_id;
-  console.log(id);
-  res.redirect('/update/products/' + id);
-});
-
-app.get('/product/create', function (req, res) {
-  var category = [];
-  var brand = [];
-  var both = [];
-  client.query('SELECT * FROM brands')
-    .then((result) => {
-      brand = result.rows;
-      console.log('brand:', brand);
-      both.push(brand);
-    })
-    .catch((err) => {
-      console.log('error', err);
-      res.send('Error!');
-    });
-  client.query('SELECT * FROM products_category')
-    .then((result) => {
-      category = result.rows;
-      both.push(category);
-      console.log(category);
-      console.log(both);
-      res.render('add-product', {
-        rows: both
-      });
-    })
-    .catch((err) => {
-      console.log('error', err);
-      res.send('Error!');
-    });
-});
-
-// connect to database
 app.get('/products', (req, res) => {
   client.query('SELECT * FROM products;', (req, data) => {
     var list = [];
@@ -347,9 +147,221 @@ app.post('/products/:id/send', function (req, res) {
     });
 });
 
-app.get('/admins', function (req, res) {
-  res.render('admins', {
+app.get('/member1', function (req, res) {
+  res.render('members', {
+    name: 'Romar Dizon',
+    email: 'romardizon27@gmail.com',
+    phone: '09213309976',
+    imageurl: 'https://scontent.fmnl4-4.fna.fbcdn.net/v/t1.0-9/15284927_1275474115852962_685390893495489160_n.jpg?_nc_cat=0&_nc_eui2=AeHCALjlEfR9s5Pouq9YJJQDWG3Hy6mo1REBqs48K1kNT0d_tMukn5-RE1iw3NBxkFiMnKYdXQUHQ11RDborwINnmCWWV8GtJipg5gsY73u7iw&oh=681069f3182f2d5961ab81639570f4e8&oe=5BC8995F',
+    hobbies: ['Playing Basketball', 'Playing Badminton', 'Playing Dota', 'Watching Movies', 'Dancing']
+
   });
+});
+
+app.get('/member2', function (req, res) {
+  res.render('members', {
+    name: 'Danica Dadia',
+    email: 'danicadadia.dd@gmail.com',
+    phone: '09297567752',
+    imageurl: 'https://scontent.fmnl4-4.fna.fbcdn.net/v/t1.0-9/26229420_2164092686964723_3022482758723077958_n.jpg?_nc_cat=0&_nc_eui2=AeHuBXDXg38sC4JhAEnnlFggZE4VngC4GqR8GpT9Mgzaq4_1p8gjo2M23vhAjZ1ctPLULalQ7r0CKnBEFbdY0U5aMz1GRBdp6P-Cjc7himBN9w&oh=cc12724b1e7da212bf7f1e2a379bbfd4&oe=5BFF378E',
+    hobbies: ['Watching Movies', 'Dancing', 'Makeup']
+
+  });
+});
+
+// admin side
+
+app.get('/customers', function (req, res) {
+  client.query('SELECT * FROM customers ORDER BY id DESC')
+    .then((data) => {
+      console.log('results?', data.rows);
+      res.render('customers', { layout: 'submain',
+        result: data.rows
+      });
+    })
+    .catch((err) => {
+      console.log('error', err);
+      res.send('Error!');
+    });
+});
+
+app.get('/customers/:id', function (req, res) {
+  client.query("SELECT customers.first_name AS first_name, customers.middle_name AS middle_name, customers.last_name AS last_name, customers.email AS email, customers.state AS state, customers.city AS city, customers.street AS street, customers.zipcode AS zipcode, products.name AS product_name, orders.quantity AS quantity, orders.purchase_date AS purchase_date FROM orders INNER JOIN customers ON orders.customer_id=customers.id INNER JOIN products ON orders.product_id=products.id WHERE customers.id = '" + req.params.id + "' ORDER BY purchase_date DESC;")
+    .then((data) => {
+      console.log('results?', data);
+      res.render('customer-details', { layout: 'submain',
+        result: data.rows
+      });
+    })
+    .catch((err) => {
+      console.log('error', err);
+      res.send('Error!');
+    });
+});
+
+app.get('/orders', function (req, res) {
+  client.query('SELECT customers.first_name AS first_name, customers.middle_name AS middle_name, customers.last_name AS last_name, customers.email AS email, products.name AS products_name, orders.purchase_date AS purchase_date, orders.quantity AS quantity FROM orders INNER JOIN products ON orders.product_id=products.id INNER JOIN customers ON orders.customer_id=customers.id ORDER BY purchase_date DESC;')
+    .then((data) => {
+      console.log('results?', data);
+      res.render('orders', { layout: 'submain',
+        result: data.rows
+      });
+    })
+    .catch((err) => {
+      console.log('error', err);
+      res.send('Error!');
+    });
+});
+
+app.post('/products/:id/forms', function (req, res) {
+  client.query('SELECT products.name AS name, products.id AS id FROM products LEFT JOIN brands ON products.brand_id=brands.id RIGHT JOIN products_category ON products.category_id=products_category.id WHERE products.id = ' + req.params.id + ';')
+    .then((results) => {
+      console.log('results?', results);
+      res.render('form', {
+        name: results.rows[0].name
+      });
+    })
+    .catch((err) => {
+      console.log('error', err);
+      res.send('Error!');
+    });
+});
+
+app.get('/product/add', function (req, res) {
+  res.render('add-product', { layout: 'submain'
+
+  });
+});
+
+app.get('/update/products/:id', function (req, res) {
+  client.query('SELECT * FROM products WHERE id = $1', [req.params.id], (err, data) => {
+    if (err) {}
+    client.query('SELECT * from brands', (err2, databrands) => {
+      client.query('SELECT * FROM products_category', (err3, datacategory) => {
+        res.render('update-products', { layout: 'submain',
+          product_name: data.rows[0].name,
+          product_id: data.rows[0].id,
+          product_description: data.rows[0].description,
+          product_tagline: data.rows[0].tagline,
+          product_price: data.rows[0].price,
+          product_warranty: data.rows[0].warranty,
+          product_brand_id: data.rows[0].brand_id,
+          product_category_id: data.rows[0].category_id,
+          brands: databrands.rows,
+          categories: datacategory.rows
+        });
+      });
+    });
+  });
+});
+
+app.post('/update/product/form', function (req, res) {
+  const query = {
+    text: 'UPDATE products SET name = $1, description = $2, tagline = $3, price = $4, warranty = $5, brand_id = $6, image= $7, category_id = $8 WHERE id = $9',
+    values: [req.body.product_name, req.body.product_description, req.body.product_tagline, req.body.product_price, req.body.product_warranty, req.body.product_brand, req.body.product_category, req.body.product_id, req.body.product_image]
+  };
+  console.log(query);
+  client.query(query, (req, data) => {
+    res.redirect('/products');
+  });
+});
+
+app.post('/update/products', function (req, res) {
+  var id = req.body.product_id;
+  console.log(id);
+  res.redirect('/update/products/' + id);
+});
+
+app.get('/category/create', function (req, res) {
+  res.render('create-category', { layout: 'submain'
+
+  });
+});
+
+app.get('/brand/create', function (req, res) {
+  res.render('create-brand', { layout: 'submain'
+
+  });
+});
+
+app.post('/brand/create/saving', function (req, res) {
+  console.log(req.body);
+  client.query("INSERT INTO brands (brand_name, brand_description) VALUES ('" + req.body.brand_name + "', '" + req.body.brand_description + "')");
+  res.redirect('/brand');
+});
+
+app.get('/brand', function (req, res) {
+  client.query('SELECT * FROM brands')
+    .then((data) => {
+      console.log('results?', data);
+      res.render('brand', { layout: 'submain',
+        result: data.rows
+      });
+    })
+    .catch((err) => {
+      console.log('error', err);
+      res.send('Error!');
+    });
+});
+
+app.post('/category/create/saving', function (req, res) {
+  console.log(req.body);
+  client.query("INSERT INTO products_category (name) VALUES ('" + req.body.name + "')");
+  res.redirect('/category');
+});
+
+app.get('/category', function (req, res) {
+  client.query('SELECT * FROM products_category')
+    .then((data) => {
+      console.log('results?', data);
+      res.render('category', { layout: 'submain',
+        result: data.rows
+      });
+    })
+    .catch((err) => {
+      console.log('error', err);
+      res.send('Error!');
+    });
+});
+
+app.post('/addproduct', function (req, res) {
+  console.log(req.body);
+  client.query("INSERT INTO products (name, description, tagline, price, warranty, brand_id, category_id, image) VALUES ('" + req.body.product_name + "', '" + req.body.product_description + "', '" + req.body.product_tagline + "', '" + req.body.product_price + "', '" + req.body.product_warranty + "', '" + req.body.product_brand + "', '" + req.body.product_category + "','" + req.body.product_image + "')");
+  res.redirect('/products');
+});
+
+app.get('/product/create', function (req, res) {
+  var category = [];
+  var brand = [];
+  var both = [];
+  client.query('SELECT * FROM brands')
+    .then((result) => {
+      brand = result.rows;
+      console.log('brand:', brand);
+      both.push(brand);
+    })
+    .catch((err) => {
+      console.log('error', err);
+      res.send('Error!');
+    });
+  client.query('SELECT * FROM products_category')
+    .then((result) => {
+      category = result.rows;
+      both.push(category);
+      console.log(category);
+      console.log(both);
+      res.render('add-product', { layout: 'submain',
+        rows: both
+      });
+    })
+    .catch((err) => {
+      console.log('error', err);
+      res.send('Error!');
+    });
+});
+
+app.get('/admins', function (req, res) {
+  res.render('admins', { layout: 'submain' });
 });
 
 // Server
