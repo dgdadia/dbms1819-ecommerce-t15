@@ -1,10 +1,3 @@
-<<style>
-.container{
-  background-color: pink;
-  margin-top: 100px;
-}
-</style>
-
 <div class="container">
 <table class="table">
   <thead class="thead-dark">
@@ -15,7 +8,7 @@
     </tr>
   </thead>
   <tbody>
-  	{{#each rows}}
+  	{{#each result}}
     <tr>
       <th scope="row">{{this.id}}</th>
       <td>{{this.brand_name}}</td>
@@ -24,7 +17,7 @@
     </tr>
   </tbody>
 </table>
-
   </tbody>
+   <a class="btn btn-danger btn-lg" href="/brand/create" role="button">CREATE BRAND</a>
+
 </table>
-</div>

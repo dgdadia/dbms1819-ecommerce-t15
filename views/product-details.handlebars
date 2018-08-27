@@ -24,7 +24,7 @@
 	background: #FFC0CB;
 }
 .btn-design{
-	background-color:#FFC0CB ;
+	background-color:#FF69B4 ;
 	border-color:#FF1493;
 	color: white;
 }
@@ -42,28 +42,30 @@
 </style>
 <body>
 <div class="container">
-		{{#each data}}
-			<a href="/products" class="btn btn-danger btn-lg" role="button" style="float: right">BACK</a>
+			{{!-- <a href="/products" class="btn btn-danger btn-lg" role="button" style="float: right">BACK</a> --}}
 			<div class="col-lg-8 col-md-8 col-sm-8 mb-0 mx-auto">
+				<form  action="{{product_id}}/forms" method="POST">
 				<div class="card center">
-					<img class="card-img-top" src="{{this.image}}" alt="{{this.name}}">
+					<img class="card-img-top" src="{{product_image}}" alt="{{product_name}}">
 					<div class="card-body">
 
-						<h4 class="card-title">{{this.brand}} </h4>
-						<h4 class="card-title">{{this.name}}</h4>
-						<h6 class="card-title">{{this.description}} </h6>
-						<h5 class="card-title">₱ {{this.price}}.00</h5>
-
-
+						<h4 class="card-title">{{product_name}} </h4>
+						<h4 class="card-title">{{product_brand}}</h4>
+						<h6 class="card-title">{{product_description}} </h6>
+						<h5 class="card-title">₱ {{product_price}}.00</h5>
 						
 					</div>
-					<a href="/form" style="float:right" class="btn btn-lg btn-design" role="button">Order Now!</button>
+					
 			</div>
-			
-		</div>
-{{/each}}
+			<button href="{{product_id}}/forms" style="float:left" class="btn btn-lg btn-design" type="submit" role="button">Order Now!</button>
+		</form>
+		<form action="/update/products" method="POST">
+      <input type="hidden" name="product_id" value="{{product_id}}">
+      <a href="/update/products/{{product_id}}"><button class="btn btn-lg btn-design  " style="float:right; margin-top: -17px; " role="button" type="submit" name="" value="UPDATE">UPDATE</button></a>
+      </form> 
 		
+		</div>
+
+
 	</div>
 </body>
-
-

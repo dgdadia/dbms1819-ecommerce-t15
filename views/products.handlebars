@@ -5,6 +5,8 @@
 
 .card{
 	background-color: #FFB6C1;
+	height: 480px;
+	margin-top:10px;
 }
 .text-box{
 	background-color: #FFB6C1;
@@ -46,12 +48,12 @@ a:hover{
 	</div>
 </div>-->
 <div class="jumbotron mt-0">
-		<div class="row mx-5">
+		<div class="row mx-auto">
 			{{#each data}}
-			<div class="col-lg-5 col-md-4 col-sm-4 mb-4">
+			<div class="col-lg-3 col-md-3 col-sm-3 mb-0">
 				<div class="card center">
 					<a href="/products/{{this.id}}"><br>
-						<img class="card-img-top" src="{{this.image}}">
+						<img class="card-img-top" src="{{this.image}}" style="height: 300px; width: 290px; color: darkgray;">
 						<div class="text-box">
 								<h5 class="card-title text-center my-3">{{this.brand}} <br> {{this.name}}</h5>
 									<h5 class="card-title text-center">₱ {{this.price}}.00</h5>
