@@ -4,6 +4,8 @@ const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 const { Client } = require('pg');
+// const moment = require('moment');
+const Product = require('./models/product');
 
 const client = new Client({
   database: 'deatjh8dni4e5m',
@@ -44,10 +46,35 @@ app.get('/', function (req, res) {
   });
 });
 
+app.get('/login', (req, res) => {
+  res.render('login', { layout: 'login-form'
+
+  });
+});
+
+app.post('/login', (req, res) => {
+  console.log('login data', req.body);
+  res.render('login', { layout: 'login-form'
+
+  });
+});
+
+app.get('/signup', (req, res) => {
+  res.render('signup', {
+
+  });
+});
+
+app.get('/signup', (req, res) => {
+  console.log('signup data', req.body);
+  res.render('signup', {
+
+  });
+});
+
 app.get('/products', (req, res) => {
   client.query('SELECT * FROM products;', (req, data) => {
     var list = [];
-
     for (var i = 0; i < data.rows.length; i++) {
       list.push(data.rows[i]);
     }
@@ -58,24 +85,9 @@ app.get('/products', (req, res) => {
   });
 });
 
-app.get('/products/:id', (req, res) => {
-  var id = req.params.id;
-  client.query('SELECT * FROM products WHERE id = $1', [id], (req, data) => {
-    client.query('SELECT * FROM brands WHERE id = $1', [data.rows[0].brand_id], (err, data2) => {
-      if (err) {}
-      res.render('product-details', {
-        product_name: data.rows[0].name,
-        product_id: data.rows[0].id,
-        product_description: data.rows[0].description,
-        product_tagline: data.rows[0].tagline,
-        product_price: data.rows[0].price,
-        product_warranty: data.rows[0].warranty,
-        product_brand_id: data.rows[0].brand_id,
-        product_category_id: data.rows[0].category_id,
-        product_image: data.rows[0].image,
-        product_brand: data2.rows[0].brand_name
-      });
-    });
+app.get('/products/:id', function (req, res) {
+  Product.getById(client, req.params.id, function (productData) {
+    res.render('product-details', productData);
   });
 });
 
@@ -171,6 +183,8 @@ app.get('/member2', function (req, res) {
 
 // admin side
 
+// const Customers = require('./models/customer');
+
 app.get('/customers', function (req, res) {
   client.query('SELECT * FROM customers ORDER BY id DESC')
     .then((data) => {
@@ -199,19 +213,29 @@ app.get('/customers/:id', function (req, res) {
     });
 });
 
+const Orders = require('./models/orders');
+
 app.get('/orders', function (req, res) {
-  client.query('SELECT customers.first_name AS first_name, customers.middle_name AS middle_name, customers.last_name AS last_name, customers.email AS email, products.name AS products_name, orders.purchase_date AS purchase_date, orders.quantity AS quantity FROM orders INNER JOIN products ON orders.product_id=products.id INNER JOIN customers ON orders.customer_id=customers.id ORDER BY purchase_date DESC;')
-    .then((data) => {
-      console.log('results?', data);
-      res.render('orders', { layout: 'submain',
-        result: data.rows
-      });
-    })
-    .catch((err) => {
-      console.log('error', err);
-      res.send('Error!');
+  Orders.list(client, {}, function (orders) {
+    res.render('orders', { layout: 'submain',
+      orders: orders
     });
-});
+  });
+})
+;
+// app.get('/orders', function (req, res) {
+//   client.query('SELECT customers.first_name AS first_name, customers.middle_name AS middle_name, customers.last_name AS last_name, customers.email AS email, products.name AS products_name, orders.purchase_date AS purchase_date, orders.quantity AS quantity FROM orders INNER JOIN products ON orders.product_id=products.id INNER JOIN customers ON orders.customer_id=customers.id ORDER BY purchase_date DESC;')
+//     .then((data) => {
+//       console.log('results?', data);
+//       res.render('orders', { layout: 'submain',
+//         result: data.rows
+//       });
+//     })
+//     .catch((err) => {
+//       console.log('error', err);
+//       res.send('Error!');
+//     });
+// });
 
 app.post('/products/:id/forms', function (req, res) {
   client.query('SELECT products.name AS name, products.id AS id FROM products LEFT JOIN brands ON products.brand_id=brands.id RIGHT JOIN products_category ON products.category_id=products_category.id WHERE products.id = ' + req.params.id + ';')

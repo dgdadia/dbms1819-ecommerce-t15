@@ -23,34 +23,10 @@ a:hover{
 }
 </style>
 	
-
-<!--<div class="jumbotron mt-4">
-		<div class="row mx-6">
-		{{#each data}}
-
-			<div class="col-lg-4 col-md-4 col-sm-12 mb-4 mx-auto">
-
-				<div class="card center">
-					<a href="/products/{{this.id}}"><br>
-						<img class="card-img-top" src="{{this.image}}">
-						<div class="text-box">
-
-					<h3 class="card-title text-center">{{this.brands}}</h3><br> {{this.name}}</h5>
-							<h5 class="card-title">₱ {{this.price}}.00</h5>
-						<p class="card-text">
-							<h7 class="card-title">{{this.products_category}}</h7>
-						</p>
-							<h7 class="card-title">{{this.description}}</h7>
-					</div>
-				</div>
-			</div>
-		{{/each}}
-	</div>
-</div>-->
 <div class="jumbotron mt-0">
 		<div class="row mx-auto">
 			{{#each data}}
-			<div class="col-lg-3 col-md-3 col-sm-3 mb-0">
+			<div class="col-lg-3 col-md-3 col-sm-2 mb-0">
 				<div class="card center">
 					<a href="/products/{{this.id}}"><br>
 						<img class="card-img-top" src="{{this.image}}" style="height: 300px; width: 290px; color: darkgray;">
@@ -66,3 +42,16 @@ a:hover{
 		</div>
 	</div>
 </div>
+
+<footer class="footer">
+
+    <!-- Footer Elements -->
+    <div class="container">
+
+      <!-- Social buttons -->
+    </div>
+    <div class="footer-copyright text-center py-3">© 2018 Copyright:
+      <a href="https://my-profile-dadi.herokuapp.com"> Dadia & Dizon</a>
+    </div>
+
+  </footer>	
