@@ -1,23 +1,30 @@
- <!DOCTYPE html>
- <html>
+  <!DOCTYPE>
+<html>
   <head>
-  <title>My Make-up World</title>
+    <title> My Makeup World </title>
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js">
-</script>
-</head>
+  </head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+ <nav class="navbar navbar-expand navbar-dark static-top" style="background-color:  #FF69B4">
+      
+      <a class="navbar-brand mr-1" href="/" style="font-size:30px; color: white;">My Makeup World-ADMIN</a>
+       <button type="button" class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle"><img src="https://www.shareicon.net/download/2015/10/11/654470_house_512x512.png" style="width:30px; height:30px;"></button>
+       <button type="button" class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle"><img src="https://cdn0.iconfinder.com/data/icons/thin-communication-messaging/24/thin-0306_chat_message_discussion_bubble_conversation-512.png" style="width:30px; height:30px;"></button>
+       <button type="button" class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle"><img src="https://cdn3.iconfinder.com/data/icons/line-icons-medium-version/64/bell-512.png" style="width:30px; height:30px;"></button>
+ </nav>
 
 <style>
   html, body{
     height: 100%;
     width: 100%;
     font-family: 'Poppins', sans-serif;
+    background-color: #ffb3cc;
     color: white;
   }
-
 .footer {
    position: fixed;
    left: 0;
@@ -27,19 +34,6 @@
    color: white;
    text-align: center;
 }
-  .intro{
-    height: 100%;
-    width: 100%;
-    margin: auto;
-    display: table;
-    top: 0;
-  }
-  .intro .inner{
-    display: table-cell;
-    vertical-align: middle;
-    width: 100%;
-    max-width: none;
-  }
   .content{
     max-width: 1000px;
     margin: 0 auto;
@@ -48,11 +42,13 @@
   }
   .container{
    background-color: lightpink;
-  margin-top: 100px;
-  margin: auto;
-  margin-top: 20px;
-  color: darkgoldenrod;
+   margin: 0px 0px 0px 250px;
+   color: darkgoldenrod;
+   max-width: 80%;
 }
+ .form{
+  width: 50%;
+ }
   .header1{
   font-size: 125%;
   color: black;
@@ -102,10 +98,55 @@
   text-decoration: none;
   font-size: 25px;
 }
+.sidenav {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    z-index: 1;
+    top: 50;
+    left: 0;
+    background-color: #FF69B4;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+.sidenav a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 25px;
+    color:  #ffe6ee;
+    display: block;
+}
+
+.sidenav a:hover {
+    color: #f1f1f1;
+}
+
+.main {
+    margin-left: 160px; /* Same as the width of the sidenav */
+    font-size: 28px; /* Increased text to enable scrolling */
+    padding: 0px 10px;
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+}
 
 </style>
 
-  <body>
+<div class="sidenav">
+  <a href="/">Admin Dashboard</a>
+  <a href="/product/create">Products</a>
+  <a href="/category">Category</a>
+  <a href="/brand">Brand</a>
+   <a href="/orders">Order</a>
+  <a href="/customers">Customer</a>
+  <a href="#">About the Developer</a>
+  <a href="#">Contact</a>
+</div>
+
+  <body>  
     {{{body}}}
-  </body>
+</div>
 </html>
