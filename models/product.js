@@ -1,7 +1,7 @@
 var Product = {
   getById: (client, productId, callback) => {
     const productQuery = `SELECT 
-    products.id as id,
+    products.id
     products.name as name,
     products.image as image,
     products.description as description,
@@ -38,7 +38,7 @@ var Product = {
     products_category.name as category_name
     FROM products p
     INNER JOIN brands brand on products.brand_id = brand.id
-    INNTER JOIN products_category category on products.category_id = category.id
+    INNER JOIN products_category category on products.category_id = category.id
     `;
     client.query(productlistQuery, (req, data) => {
       console.log(data.rows);
