@@ -11,7 +11,7 @@
 
  <nav class="navbar navbar-expand navbar-dark static-top" style="background-color:  #FF69B4">
       
-      <a class="navbar-brand mr-1" href="/" style="font-size:30px; color: white;">My Makeup World-ADMIN</a>
+      <a class="navbar-brand mr-1" href="/" style="font-size:30px; color: #0059b3;">My Makeup World-ADMIN</a>
        <button type="button" class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle"><img src="https://www.shareicon.net/download/2015/10/11/654470_house_512x512.png" style="width:30px; height:30px;"></button>
        <button type="button" class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle"><img src="https://cdn0.iconfinder.com/data/icons/thin-communication-messaging/24/thin-0306_chat_message_discussion_bubble_conversation-512.png" style="width:30px; height:30px;"></button>
        <button type="button" class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle"><img src="https://cdn3.iconfinder.com/data/icons/line-icons-medium-version/64/bell-512.png" style="width:30px; height:30px;"></button>
@@ -22,8 +22,8 @@
     height: 100%;
     width: 100%;
     font-family: 'Poppins', sans-serif;
-    background-color: #ffb3cc;
-    color: white;
+    background-color: #ffe6f2;
+    color: black;
   }
 .footer {
    position: fixed;
@@ -34,15 +34,9 @@
    color: white;
    text-align: center;
 }
-  .content{
-    max-width: 1000px;
-    margin: 0 auto;
-    text-align: center;
-    top: 10%;
-  }
   .container{
    background-color: lightpink;
-   margin: 0px 0px 0px 250px;
+   margin: 10px 0px 0px 260px;
    color: darkgoldenrod;
    max-width: 80%;
 }
@@ -68,6 +62,23 @@
   color: white;
   font-style: bold;
 }
+ .intro{
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    display: table;
+  }
+  .intro .inner{
+    display: table-cell;
+    vertical-align: middle;
+    width: 100%;
+    max-width: none;
+  }
+  .content{
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+  }
 .body-design{
   background: #FFC0CB;
 }
@@ -86,18 +97,6 @@
   font-style: bold;
   text-transform: capitalize;
 }
-  .topnav {
-  overflow: hidden;
-  background-color:#FF69B4;
-}
-.topnav a {
-  float: left;
-  display: block;
-  color: black;
-  padding: 10px 10px;
-  text-decoration: none;
-  font-size: 25px;
-}
 .sidenav {
     height: 100%;
     width: 250px;
@@ -114,7 +113,7 @@
     padding: 6px 8px 6px 16px;
     text-decoration: none;
     font-size: 25px;
-    color:  #ffe6ee;
+    color:  #4d0033;
     display: block;
 }
 
@@ -133,10 +132,18 @@
     .sidenav a {font-size: 18px;}
 }
 
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+tr:nth-child(even) {background-color:#ffccee;}
+tr:nth-child(odd) {background-color:  #FF69B4;}
+</style>
+
 </style>
 
 <div class="sidenav">
-  <a href="/">Admin Dashboard</a>
+  <a href="/dashboard">Admin Dashboard</a>
   <a href="/product/create">Products</a>
   <a href="/category">Category</a>
   <a href="/brand">Brand</a>

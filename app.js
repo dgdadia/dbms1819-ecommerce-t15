@@ -72,22 +72,20 @@ app.get('/signup', (req, res) => {
   });
 });
 
-app.get('/products', (req, res) => {
-  client.query('SELECT * FROM products;', (req, data) => {
-    var list = [];
-    for (var i = 0; i < data.rows.length; i++) {
-      list.push(data.rows[i]);
-    }
+// Product//
+app.get('/products', function (req, res) {
+  Product.list(client, {}, function (products) {
     res.render('products', {
-      data: list,
-      title: 'My Makeup World'
+      products: products
     });
   });
 });
 
 app.get('/products/:id', function (req, res) {
-  Product.getById(client, req.params.id, function (productData) {
-    res.render('product-details', productData);
+  Product.getById(client, {}, function (products) {
+    res.render('product-details', {
+      products: products
+    });
   });
 });
 
@@ -388,6 +386,11 @@ app.get('/admins', function (req, res) {
   res.render('admins', { layout: 'submain' });
 });
 
+app.get('/dashboard', function (req, res) {
+  res.render('dashboard', { layout: 'submain'
+
+  });
+});
 // Server
 app.listen(app.get('port'), function () {
   console.log('Server started at port 3000');
