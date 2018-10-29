@@ -2,10 +2,19 @@ const express = require('express');
 const path = require('path');
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
-const nodemailer = require('nodemailer');
 const { Client } = require('pg');
-// const moment = require('moment');
+// console.log('config db', config.db);
+// const client = new Client(config.db);
 const Product = require('./models/product');
+const Brand = require('./models/brand');
+const Customer = require('./models/customer');
+const Order = require('./models/order');
+const Category = require('./models/categories');
+const Handlebars = require('handlebars');
+const MomentHandler = require('handlebars.moment');
+MomentHandler.registerHelpers(Handlebars);
+const NumeralHelper = require("handlebars.numeral");
+NumeralHelper.registerHelpers(Handlebars);
 
 const client = new Client({
   database: 'deatjh8dni4e5m',
@@ -46,41 +55,82 @@ app.get('/', function (req, res) {
   });
 });
 
-app.get('/login', (req, res) => {
-  res.render('login', { layout: 'login-form'
-
+app.get('/login', function (req, res) {
+  res.render('clogin', {
   });
 });
 
-app.post('/login', (req, res) => {
-  console.log('login data', req.body);
-  res.render('login', { layout: 'login-form'
-
-  });
+app.post('/login', (req,res) => {
+  console.log('login data', req.data);
+  res.render('login');
 });
 
-app.get('/signup', (req, res) => {
+app.get('/signup', function (req, res){
   res.render('signup', {
-
   });
 });
 
-app.get('/signup', (req, res) => {
-  console.log('signup data', req.body);
-  res.render('signup', {
-
-  });
+app.post('/signup', (req,res) => {
+  console.log('signup data', req.data);
+  res.render('signup');
 });
 
-app.get('/products', (req, res) => {
-  client.query('SELECT * FROM products;', (req, data) => {
+// app.get('/products', (req, res) => {
+//   client.query('SELECT * FROM products;', (req, data) => {
+//     var list = [];       
+//     for (var i = 0; i < data.rows.length; i++) {
+//       list.push(data.rows[i]);
+//     }
+//     res.render('products', {
+//       data: list,
+//       title: 'My Makeup World'
+//     });
+//   });
+// });
+
+// app.get('/products', function (req, res) {
+//   Product.list(client, {}, function(products) {
+//     res.render('products', {
+//       title: 'Most Popular Product',
+//       products: products
+//     });
+//   });
+// });
+
+app.get('/products',(req,res)=>{
+  
+  client.query('SELECT * FROM Products;', (req,data)=>{
+
     var list = [];
-    for (var i = 0; i < data.rows.length; i++) {
+
+    for (var i=0; i< data.rows.length; i++){
       list.push(data.rows[i]);
     }
-    res.render('products', {
+    res.render('products',{
       data: list,
-      title: 'My Makeup World'
+      title: 'Most Popular Products'
+    });
+  });
+});
+
+
+app.get('/products/:id', (req, res) => {
+  var id = req.params.id;
+  client.query('SELECT * FROM products WHERE id = $1', [id], (req, data) => {
+    client.query('SELECT * FROM brands WHERE id = $1', [data.rows[0].brand_id], (err, data2) => {
+      if (err) {}
+      res.render('product-details', {
+        product_name: data.rows[0].name,
+        product_id: data.rows[0].id,
+        product_description: data.rows[0].description,
+        product_tagline: data.rows[0].tagline,
+        product_price: data.rows[0].price,
+        product_warranty: data.rows[0].warranty,
+        product_brand_id: data.rows[0].brand_id,
+        product_category_id: data.rows[0].category_id,
+        product_image: data.rows[0].image,
+        product_brand: data2.rows[0].brand_name
+      });
     });
   });
 });
@@ -90,6 +140,7 @@ app.get('/products/:id', function (req, res) {
     res.render('product-details', productData);
   });
 });
+
 
 app.post('/products/:id/send', function (req, res) {
   client.query("INSERT INTO customers (email, first_name, middle_name, last_name, state, city, street, zipcode) VALUES ('" + req.body.email + "', '" + req.body.first_name + "', '" + req.body.middle_name + "', '" + req.body.last_name + "', '" + req.body.state + "', '" + req.body.city + "', '" + req.body.street + "', '" + req.body.zipcode + "') ON CONFLICT (email) DO UPDATE SET first_name = '" + req.body.first_name + "', middle_name = '" + req.body.middle_name + "', last_name = '" + req.body.last_name + "', state = '" + req.body.state + "', city = '" + req.body.city + "', street = '" + req.body.street + "', zipcode = '" + req.body.zipcode + "' WHERE customers.email ='" + req.body.email + "';");
@@ -159,31 +210,7 @@ app.post('/products/:id/send', function (req, res) {
     });
 });
 
-app.get('/member1', function (req, res) {
-  res.render('members', {
-    name: 'Romar Dizon',
-    email: 'romardizon27@gmail.com',
-    phone: '09213309976',
-    imageurl: 'https://scontent.fmnl4-4.fna.fbcdn.net/v/t1.0-9/15284927_1275474115852962_685390893495489160_n.jpg?_nc_cat=0&_nc_eui2=AeHCALjlEfR9s5Pouq9YJJQDWG3Hy6mo1REBqs48K1kNT0d_tMukn5-RE1iw3NBxkFiMnKYdXQUHQ11RDborwINnmCWWV8GtJipg5gsY73u7iw&oh=681069f3182f2d5961ab81639570f4e8&oe=5BC8995F',
-    hobbies: ['Playing Basketball', 'Playing Badminton', 'Playing Dota', 'Watching Movies', 'Dancing']
-
-  });
-});
-
-app.get('/member2', function (req, res) {
-  res.render('members', {
-    name: 'Danica Dadia',
-    email: 'danicadadia.dd@gmail.com',
-    phone: '09297567752',
-    imageurl: 'https://scontent.fmnl4-4.fna.fbcdn.net/v/t1.0-9/26229420_2164092686964723_3022482758723077958_n.jpg?_nc_cat=0&_nc_eui2=AeHuBXDXg38sC4JhAEnnlFggZE4VngC4GqR8GpT9Mgzaq4_1p8gjo2M23vhAjZ1ctPLULalQ7r0CKnBEFbdY0U5aMz1GRBdp6P-Cjc7himBN9w&oh=cc12724b1e7da212bf7f1e2a379bbfd4&oe=5BFF378E',
-    hobbies: ['Watching Movies', 'Dancing', 'Makeup']
-
-  });
-});
-
 // admin side
-
-// const Customers = require('./models/customer');
 
 app.get('/customers', function (req, res) {
   client.query('SELECT * FROM customers ORDER BY id DESC')
@@ -199,6 +226,15 @@ app.get('/customers', function (req, res) {
     });
 });
 
+// app.get('/customers', function (req, res) {
+//   Customer.list(client, {}, function (customers) {
+//     res.render('customers', {
+//       layout: 'submain',
+//       customers: customers
+//     });
+//   });
+// });
+
 app.get('/customers/:id', function (req, res) {
   client.query("SELECT customers.first_name AS first_name, customers.middle_name AS middle_name, customers.last_name AS last_name, customers.email AS email, customers.state AS state, customers.city AS city, customers.street AS street, customers.zipcode AS zipcode, products.name AS product_name, orders.quantity AS quantity, orders.purchase_date AS purchase_date FROM orders INNER JOIN customers ON orders.customer_id=customers.id INNER JOIN products ON orders.product_id=products.id WHERE customers.id = '" + req.params.id + "' ORDER BY purchase_date DESC;")
     .then((data) => {
@@ -213,29 +249,19 @@ app.get('/customers/:id', function (req, res) {
     });
 });
 
-const Orders = require('./models/orders');
-
 app.get('/orders', function (req, res) {
-  Orders.list(client, {}, function (orders) {
-    res.render('orders', { layout: 'submain',
-      orders: orders
+  client.query('SELECT customers.first_name AS first_name, customers.middle_name AS middle_name, customers.last_name AS last_name, customers.email AS email, products.name AS products_name, orders.purchase_date AS purchase_date, orders.quantity AS quantity FROM orders INNER JOIN products ON orders.product_id=products.id INNER JOIN customers ON orders.customer_id=customers.id ORDER BY purchase_date DESC;')
+    .then((data) => {
+      console.log('results?', data);
+      res.render('orders', { layout: 'submain',
+        result: data.rows
+      });
+    })
+    .catch((err) => {
+      console.log('error', err);
+      res.send('Error!');
     });
-  });
-})
-;
-// app.get('/orders', function (req, res) {
-//   client.query('SELECT customers.first_name AS first_name, customers.middle_name AS middle_name, customers.last_name AS last_name, customers.email AS email, products.name AS products_name, orders.purchase_date AS purchase_date, orders.quantity AS quantity FROM orders INNER JOIN products ON orders.product_id=products.id INNER JOIN customers ON orders.customer_id=customers.id ORDER BY purchase_date DESC;')
-//     .then((data) => {
-//       console.log('results?', data);
-//       res.render('orders', { layout: 'submain',
-//         result: data.rows
-//       });
-//     })
-//     .catch((err) => {
-//       console.log('error', err);
-//       res.send('Error!');
-//     });
-// });
+});
 
 app.post('/products/:id/forms', function (req, res) {
   client.query('SELECT products.name AS name, products.id AS id FROM products LEFT JOIN brands ON products.brand_id=brands.id RIGHT JOIN products_category ON products.category_id=products_category.id WHERE products.id = ' + req.params.id + ';')
@@ -387,6 +413,98 @@ app.get('/product/create', function (req, res) {
 app.get('/admins', function (req, res) {
   res.render('admins', { layout: 'submain' });
 });
+
+app.get('/dashboard', function (req, res) {
+  res.render('dashboard', { layout: 'submain'
+
+  });
+});
+
+app.get('/dashboard', function(req, res) {
+  var thisDay;
+  var oneDayAgo;
+  var twoDaysAgo;
+  var threeDaysAgo;
+  var fourDaysAgo;
+  var fiveDaysAgo;
+  var sixDaysAgo;
+  var sevenDaysAgo;
+  var totalSalesLast7days;
+  var totalSalesLast30days;
+  var mostOrderedProduct;
+  var leastOrderedProduct;
+  var mostOrderedBrand;
+  var mostOrderedCategory;
+  // var topCustomersMostOrder;
+  Order.thisDay(client, {},function(result){
+    thisDay = result
+  });
+  Order.oneDayAgo(client, {},function(result){
+    oneDayAgo = result
+  });
+  Order.twoDaysAgo(client, {},function(result){
+    twoDaysAgo = result
+  });
+  Order.threeDaysAgo(client, {},function(result){
+    threeDaysAgo = result
+  });
+  Order.fourDaysAgo(client, {},function(result){
+    fourDaysAgo = result
+  });
+  Order.fiveDaysAgo(client, {},function(result){
+    fiveDaysAgo = result
+  });
+  Order.sixDaysAgo(client, {},function(result){
+    sixDaysAgo = result
+  });
+  Order.sevenDaysAgo(client, {},function(result){
+    sevenDaysAgo = result
+  });
+  Order.totalSalesLast7days(client, {},function(result){
+    totalSalesLast7days = result
+  });
+  Order.totalSalesLast30days(client, {},function(result){
+    totalSalesLast30days = result
+  });
+  Product.mostOrderedProduct(client, {},function(result){
+    mostOrderedProduct = result
+  });
+  Product.leastOrderedProduct(client, {},function(result){
+    leastOrderedProduct = result
+  });
+  Brand.mostOrderedBrand(client, {},function(result){
+    mostOrderedBrand = result
+  });
+  Category.mostOrderedCategory(client, {},function(result){
+    mostOrderedCategory = result
+  });
+  Customer.topCustomersMostOrder(client, {},function(result){
+    topCustomersMostOrder = result
+  });
+  Customer.topCustomersHighestPayment(client,{},function(result){
+      res.render('/dashboard', {
+      layout: 'submain',
+      topCustomersHighestPayment : result,
+      thisDay: thisDay[0].count,
+      oneDayAgo: oneDayAgo[0].count,
+      twoDaysAgo: twoDaysAgo[0].count,
+      threeDaysAgo: threeDaysAgo[0].count,
+      fourDaysAgo: fourDaysAgo[0].count,
+      fiveDaysAgo: fiveDaysAgo[0].count,
+      sixDaysAgo: sixDaysAgo[0].count,
+      sevenDaysAgo: sevenDaysAgo[0].count,
+      totalSalesLast7days: totalSalesLast7days[0].sum,
+      totalSalesLast30days: totalSalesLast30days[0].sum,
+      mostOrderedProduct: mostOrderedProduct,
+      leastOrderedProduct: leastOrderedProduct,
+      mostOrderedBrand: mostOrderedBrand,
+      mostOrderedCategory: mostOrderedCategory,
+      topCustomersMostOrder : topCustomersMostOrder
+    });
+  });
+});
+
+
 
 // Server
 app.listen(app.get('port'), function () {

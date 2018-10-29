@@ -1,0 +1,155 @@
+<div class="container">
+  <h2>Dashboard</h2>
+  <div class="col-lg-10 col-md-5 col-sm-1">          
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+      <th>TOP 10 CUSTOMERS WITH THE MOST NO. OF ORDERS</th>
+      </tr>
+      <tr>
+        <th>Customers</th>
+        <th>No. of Orders</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each topCustomersMostOrder}}
+      <tr>
+        <td>{{this.first_name}}  {{this.last_name}}</td>
+                <td>{{this.count}}</td>
+      </tr>
+    </tbody>
+    {{/each}}
+  </table>
+</div>
+
+<div class="col-lg-10 col-md-5 col-sm-1">          
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+      <th>TOP 10 CUSTOMER WITH HIGHEST PAYMENT</th>
+      </tr>
+      <tr>
+        <th>Customers</th>
+        <th>Payment</th>
+      </tr>
+    </thead>
+     <tbody>
+            {{#each topCustomersHighestPayment}}
+              <tr class="dashboard-table-tr">
+                <td>{{this.first_name}}  {{this.last_name}}</td>
+                <td>Php {{number this.sum}}.00</td>
+              </tr>
+            {{/each}}
+            </tbody>
+  </table>
+</div>
+
+<div class="col-lg-10 col-md-5 col-sm-1">        
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+      <th>TOP 10 MOST ORDERED PRODUCTS</th>
+      </tr>
+      <tr>
+        <th>Product</th>
+        <th>No. of Orders</th>
+      </tr>
+    </thead>
+   <tbody>
+            {{#each mostOrderedProduct}}
+                <td>{{this.products_name}}</td>
+                <td>{{this.total}}</td>
+              </tr>
+            {{/each}}
+            </tbody>
+  </table>
+</div>
+
+<div class="col-lg-10 col-md-5 col-sm-1">           
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+      <th>TOP 3 MOST ORDERED BRANDS</th>
+      </tr>
+      <tr>
+        <th>Brands</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+     <tbody>
+            {{#each mostOrderedBrand}}
+                <td>{{this.brand_name}}</td>
+                <td>{{this.total}}</td>
+              </tr>
+            {{/each}}
+            </tbody>
+  </table>
+</div>
+
+<div class="col-lg-10 col-md-5 col-sm-1">            
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+      <th>TOTAL SALES</th>
+      </tr>
+      <tr>
+        <th>Last 7 Days</th>
+        <th>Last 30 Days</th>
+      </tr>
+    <thead>
+              <tr class="dashboard-table1">
+                <th>For the last 7 Days</th>
+                <th>For the last 30 Days</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="dashboard-table-tr">
+                <td>Php {{totalSalesLast7days}}.00</td>
+                <td>Php {{totalSalesLast30days}}.00</td>
+              </tr>
+            </tbody>
+  </table>
+</div>
+
+<div class="col-lg-10 col-md-5 col-sm-1">            
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+      <th>Daily Order Count</th>
+      </tr>
+      <tr>
+        <th>Order Counts in the Last 8 Days</th>
+      </tr>
+    <tbody>
+              <tr class="dashboard-table-tr">
+                <td>This day: {{thisDay}} order/s acquired.</td>
+              </tr>
+              <tr class="dashboard-table-tr">
+                <td>1 day ago: {{oneDayAgo}} order/s acquired.</td>
+              </tr>
+              <tr class="dashboard-table-tr">
+                <td>2 days ago: {{twoDaysAgo}} order/s acquired.</td>
+              </tr>
+              <tr class="dashboard-table-tr">
+                <td>3 days ago: {{threeDaysAgo}} order/s acquired.</td>
+              </tr>
+              <tr class="dashboard-table-tr">
+                <td>4 days ago: {{fourDaysAgo}} order/s acquired.</td>
+              </tr>
+              <tr class="dashboard-table-tr">
+                <td>5 days ago: {{fiveDaysAgo}} order/s acquired.</td>
+              </tr>
+              <tr class="dashboard-table-tr">
+                <td>6 days ago: {{sixDaysAgo}} order/s acquired.</td>
+              </tr>
+              <tr class="dashboard-table-tr">
+                <td>7 days ago: {{sevenDaysAgo}} order/s acquired.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

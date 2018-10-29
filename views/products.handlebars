@@ -28,7 +28,7 @@ a:hover{
 			{{#each data}}
 			<div class="col-lg-3 col-md-3 col-sm-2 mb-0">
 				<div class="card center">
-					<a href="/products/{{this.id}}"><br>
+					<a href="/products {{this.id}}"><br>
 						<img class="card-img-top" src="{{this.image}}" style="height: 300px; width: 290px; color: darkgray;">
 						<div class="text-box">
 								<h5 class="card-title text-center my-3">{{this.brand}} <br> {{this.name}}</h5>
@@ -41,6 +41,17 @@ a:hover{
 			{{/each}}
 		</div>
 	</div>
+</div>
+
+<div>
+<ul class="pagination">
+
+  <li><a href="#">1</a></li>
+  <li><a href="#">2</a></li>
+  <li><a href="#">3</a></li>
+  <li><a href="#">4</a></li>
+  <li><a href="#">5</a></li>
+</ul>
 </div>
 
 <footer class="footer">

@@ -1,52 +1,9 @@
-<style>
-  	@import url('https://fonts.googleapis.com/css?family=Homemade Apple');
-	@import url('https://fonts.googleapis.com/css?family=Poppins');
-.header1{
-	font-size: 125%;
-	color: black;
-	text-shadow: 300px 300px 300px #f9e6ff;
-	margin-bottom: 5%;
-	font-family: 'Poppins', sans-serif;
-}
-.card{
-	background: #FF1493;
-	margin-top: 20px;
-}
-.card-body{
-	color: white;
-}
-.header-design{
-	background-color: #FF1493;
-	color: white;
-	font-style: bold;
-}
-.body-design{
-	background: #FFC0CB;
-}
-.btn-design{
-	background-color:#FF69B4 ;
-	border-color:#FF1493;
-	color: white;
-}
-.btn-design:hover{
-	background-color: #FFC0CB;
-	border-color: #FF1493;
-	color: white;
-}
-.lbl-text{
-	color:white;
-	font-style: bold;
-	text-transform: capitalize;
-}
-
-</style>
 <body>
 <div class="container">
-			{{!-- <a href="/products" class="btn btn-danger btn-lg" role="button" style="float: right">BACK</a> --}}
 			<div class="col-lg-8 col-md-8 col-sm-8 mb-0 mx-auto">
 				<form  action="{{product_id}}/forms" method="POST">
 				<div class="card center">
-					<img class="card-img-top" src="{{product_image}}" alt="{{product_name}}">
+					<img class="card-img-top" style="height: 400px; width: 400px;" src="{{product_image}}" alt="{{product_name}}">
 					<div class="card-body">
 
 						<h4 class="card-title">{{product_name}} </h4>
@@ -61,7 +18,7 @@
 		</form>
 		<form action="/update/products" method="POST">
       <input type="hidden" name="product_id" value="{{product_id}}">
-      <a href="/update/products/{{product_id}}"><button class="btn btn-lg btn-design  " style="float:right; margin-top: -17px; " role="button" type="submit" name="" value="UPDATE">UPDATE</button></a>
+      <a href="/update/products/{{product_id}}"><button class="btn btn-lg btn-design  " style="float:right; margin-top: -5px; " role="button" type="submit" name="" value="UPDATE">UPDATE</button></a>
       </form> 
 		
 		</div>
