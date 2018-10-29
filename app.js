@@ -1,397 +1,398 @@
-const express = require('express');
-const path = require('path');
-const exphbs = require('express-handlebars');
-const bodyParser = require('body-parser');
-const nodemailer = require('nodemailer');
-const { Client } = require('pg');
-// const moment = require('moment');
-const Product = require('./models/product');
+var express = require('express');
+var path = require('path');
+var exphbs = require('express-handlebars');
+var bodyParser = require('body-parser');
+var passport = require('passport');
+var Strategy = require('passport-local').Strategy;
+var session = require('express-session');
+var bcrypt = require('bcryptjs');
+var port = process.env.PORT || 3000;
+var config = require('./config.js');
+var { Client } = require('pg');
+console.log('config db', config.db);
+var client = new Client(config.db);
 
-const client = new Client({
-  database: 'deatjh8dni4e5m',
-  user: 'qseerelbxgffyi',
-  password: '9b1dd5ea684422c5fe984b94449a90a544b997a33ceaf5ae5eb3c652a70a4fef',
-  host: 'ec2-54-83-12-150.compute-1.amazonaws.com',
-  port: 5432,
-  ssl: true
-});
 
+const db = require('./db/db.js');
+const admin = require('./models/admin.js');
+const faculty = require('./models/faculty.js');
+const student = require('./models/student.js');
+// connect to database
 client.connect()
   .then(function () {
-    console.log('Connected to database');
+    console.log('Connected to database!');
   })
   .catch(function (err) {
-    if (err) {}
-    console.log('Cannot connect to database');
+    if (err) throw err;
+    console.log('Cannot connect to database!');
   });
 
-const app = express();
-// tell express which folder is a static/public folder
-app.set('views', path.join(__dirname, 'views'));
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
-app.set('view engine', 'handlebars');
-app.set('port', (process.env.PORT || 3000));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'bower_components')));
+var app = express();
 
-// Body Parser middleware
+// Set Public folder
+app.use(express.static(path.join(__dirname, '/public')));
+
+// Assign Handlebars To .handlebars files
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+
+// Set Default extension .handlebars
+app.set('view engine', 'handlebars');
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Client
+/* ----- Session ----- */
+app.use(session({
+  secret: 'team6secret',
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new Strategy({
+    usernameField: 'email',
+    passwordField: 'password'
+  },
+
+function(email, password, cb) {
+  admin.getByEmail(email, function(user) {
+    if (!user) { return cb(null, false); }
+    if (user.password != password) { return cb(null, false); }
+    return cb(null, user);
+  });
+}));
+
+passport.serializeUser(function(user, cb) {
+  console.log('serializeUser', user)
+  cb(null, user.id);
+});
+
+passport.deserializeUser(function(id, cb) {
+  admin.getById(id, function (user) {
+    console.log('deserializeUser', user)
+    cb(null, user);
+  });
+});
+
+function isAdmin(req, res, next) {
+   if (req.isAuthenticated()) {
+      console.log(req.user);
+    role = req.user.isAdmin
+    console.log(role)
+    if (req.user.isAdmin == true) {
+      req.session.admin == true;
+        return next();
+    }
+    else{
+      res.send(404);
+    }
+  }
+  else{
+res.redirect('/admin');
+  }
+}
+function isFaculty(req, res, next) {
+   if (req.isAuthenticated()) {
+  admin.checkIfCommittee(req.user.id,function(result){
+    if(result.rowCount > 0){
+      req.session.committee = true;
+    }
+  });
+  admin.checkIfAdviser(req.user.id,function(result){
+    if(result.rowCount > 0){
+      req.session.adviser = true;
+    }
+  });
+  admin.getById(req.user.id,function(user){
+    req.session.admin = req.user.isAdmin;
+    role = req.user.user_type  
+    console.log('role:',role);
+    if (role == 'faculty') { 
+    console.log(req.session.admin)   
+        return next();
+    }
+    else{
+     res.send(404);
+    }
+
+  });
+
+  }
+  else{
+res.redirect('/faculty');
+}
+}
+
+function isAdviser(req,res,next){
+  if (req.session.adviser != true){
+    res.send(404)
+  }
+  else{
+    return next();
+  }
+}
+
+function isStudent(req, res, next) {
+   if (req.isAuthenticated()) {
+  admin.getGroupId(req.user.id,function(user){
+    req.session.group_id = user.group_id;
+    console.log(req.session.group_id)
+    role = req.user.user_type;
+    if (role == 'student') {
+        return next();
+    }
+    else{
+      res.send(404);
+    }
+  });
+  }
+  else{
+    res.redirect('/student');
+  }
+}
+
+function isGuest(req, res, next) {
+   if (req.isAuthenticated()) {
+    role = req.user.user_type;
+    console.log('role:',role);
+    if (role == 'guest') {
+      return next();
+    }
+    else{
+      res.send(404);
+    }
+  }
+  else{
+    res.redirect('/');
+  }
+}
+
+/* ---------- Welcome Page / Login Page ---------- */
 
 app.get('/', function (req, res) {
-  res.render('home', {
-
+  res.render('login', {
+    layout: false
   });
 });
 
-app.get('/login', (req, res) => {
-  res.render('login', { layout: 'login-form'
+app.post('/login', 
+  passport.authenticate('local', { failureRedirect: '/' }),
+  function(req, res) {
+    if (req.user.is_admin) {
+      res.redirect('/admin');
+    } else if (req.user.user_type == 'faculty') {
+      res.redirect('/faculty');
+    } else if (req.user.user_type == 'student') {
+      res.redirect('/student');
+    } else {
+      res.redirect('/');
+    }
+  });
+/* ------- Authentication --------*/
 
+
+
+/* ------------------------ ADMIN PAGE ------------------------ */
+app.get('/admin', function (req, res) {
+  res.render('admin/dashboard', {
   });
 });
 
-app.post('/login', (req, res) => {
-  console.log('login data', req.body);
-  res.render('login', { layout: 'login-form'
-
-  });
-});
-
-app.get('/signup', (req, res) => {
-  res.render('signup', {
-
-  });
-});
-
-app.get('/signup', (req, res) => {
-  console.log('signup data', req.body);
-  res.render('signup', {
-
-  });
-});
-
-// Product//
-app.get('/products', function (req, res) {
-  Product.list(client, {}, function (products) {
-    res.render('products', {
-      products: products
+/* -------- FACULTY --------- */
+app.get('/admin/faculty', function (req, res) {
+  admin.facultyList({}, function(facultyList) {
+    res.render('admin/list_faculty', {
+    first_name: req.user.first_name,
+    last_name: req.user.last_name,
+    email: req.user.email,
+    phone: req.user.phone,
+    user_type: req.user.user_type,
+    faculties: facultyList
     });
   });
 });
 
-app.get('/products/:id', function (req, res) {
-  Product.getById(client, {}, function (products) {
-    res.render('product-details', {
-      products: products
+app.get('/admin/add_faculty', function (req, res) {
+  res.render('admin/add_faculty', {
+  });
+});
+
+app.post('/admin/add_faculty', function (req, res) {
+  admin.createFaculty({
+    first_name: req.body.fname,
+    last_name: req.body.lname,
+    email: req.body.email,
+    phone: req.body.phone,
+    password: req.body.password,
+    user_type: req.body.user_type,
+    is_admin: req.body.is_admin
+  },
+  function(callback){
+    res.redirect('/admin/faculty');
+  });
+});
+
+/* -------- STUDENT --------- */
+app.get('/admin/student', function (req, res) {
+  admin.studentList({}, function(studentList) {
+    res.render('admin/list_student', {
+    student_id: req.user.id,
+    student_number: req.user.student_number,
+    first_name: req.user.first_name,
+    last_name: req.user.last_name,
+    email: req.user.email,
+    phone: req.user.phone,
+    user_type: req.user.user_type,
+    students: studentList
     });
   });
 });
 
-app.post('/products/:id/send', function (req, res) {
-  client.query("INSERT INTO customers (email, first_name, middle_name, last_name, state, city, street, zipcode) VALUES ('" + req.body.email + "', '" + req.body.first_name + "', '" + req.body.middle_name + "', '" + req.body.last_name + "', '" + req.body.state + "', '" + req.body.city + "', '" + req.body.street + "', '" + req.body.zipcode + "') ON CONFLICT (email) DO UPDATE SET first_name = '" + req.body.first_name + "', middle_name = '" + req.body.middle_name + "', last_name = '" + req.body.last_name + "', state = '" + req.body.state + "', city = '" + req.body.city + "', street = '" + req.body.street + "', zipcode = '" + req.body.zipcode + "' WHERE customers.email ='" + req.body.email + "';");
-  console.log(req.body);
-
-  client.query("SELECT id FROM customers WHERE email = '" + req.body.email + "';")
-    .then((results) => {
-      var id = results.rows[0].id;
-      console.log(id);
-      client.query('INSERT INTO orders (product_id,customer_id,quantity) VALUES (' + req.params.id + ', ' + id + ', ' + req.body.quantity + ')')
-
-        .then((results) => {
-          var maillist = ['dbmsteam15@gmail.com', req.body.email];
-          var transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465,
-            secure: true,
-            auth: {
-              user: 'dbmsteam15@gmail.com',
-              pass: 'team15@dbms'
-            }
-          });
-          const mailOptions = {
-            from: '"Team 15" <dbmsteam15@gmail.com>',
-            to: maillist,
-            subject: 'Order Request Information',
-            html:
-
-    '<table>' +
-    '<thead>' +
-    '<tr>' +
-    '<th>Customer</th>' +
-    '<th>Name</th>' +
-    '<th>Email</th>' +
-    '<th>Product</th>' +
-    '<th>Quantity</th>' +
-    '</tr>' +
-    '<thead>' +
-    '<tbody>' +
-    '<tr>' +
-    '<td>' + req.body.first_name + '</th>' +
-    '<td>' + req.body.last_name + '</td>' +
-    '<td>' + req.body.email + '<td>' +
-    '<td>' + req.body.products_name + '</td>' +
-    '<td>' + req.body.quantity + '</td>' +
-    '</tr>' +
-    '</tbody>' +
-    '</table>'
-          };
-
-          transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-              return console.log(error);
-            }
-            console.log('Message %s sent: %s', info.messageId, info.response);
-            res.redirect('/products');
-          });
-        })
-        .catch((err) => {
-          console.log('error', err);
-          res.send('Error!');
-        });
-    })
-    .catch((err) => {
-      console.log('error', err);
-      res.send('Error!');
-    });
-});
-
-app.get('/member1', function (req, res) {
-  res.render('members', {
-    name: 'Romar Dizon',
-    email: 'romardizon27@gmail.com',
-    phone: '09213309976',
-    imageurl: 'https://scontent.fmnl4-4.fna.fbcdn.net/v/t1.0-9/15284927_1275474115852962_685390893495489160_n.jpg?_nc_cat=0&_nc_eui2=AeHCALjlEfR9s5Pouq9YJJQDWG3Hy6mo1REBqs48K1kNT0d_tMukn5-RE1iw3NBxkFiMnKYdXQUHQ11RDborwINnmCWWV8GtJipg5gsY73u7iw&oh=681069f3182f2d5961ab81639570f4e8&oe=5BC8995F',
-    hobbies: ['Playing Basketball', 'Playing Badminton', 'Playing Dota', 'Watching Movies', 'Dancing']
-
+app.get('/admin/add_student', function (req, res) {
+  res.render('admin/add_student', {
   });
 });
 
-app.get('/member2', function (req, res) {
-  res.render('members', {
-    name: 'Danica Dadia',
-    email: 'danicadadia.dd@gmail.com',
-    phone: '09297567752',
-    imageurl: 'https://scontent.fmnl4-4.fna.fbcdn.net/v/t1.0-9/26229420_2164092686964723_3022482758723077958_n.jpg?_nc_cat=0&_nc_eui2=AeHuBXDXg38sC4JhAEnnlFggZE4VngC4GqR8GpT9Mgzaq4_1p8gjo2M23vhAjZ1ctPLULalQ7r0CKnBEFbdY0U5aMz1GRBdp6P-Cjc7himBN9w&oh=cc12724b1e7da212bf7f1e2a379bbfd4&oe=5BFF378E',
-    hobbies: ['Watching Movies', 'Dancing', 'Makeup']
-
+app.post('/admin/add_student', function (req, res) {
+  admin.createStudent({
+    first_name: req.body.fname,
+    last_name: req.body.lname,
+    email: req.body.email,
+    student_number: req.body.student_number,
+    phone: req.body.phone,
+    password: req.body.password,
+    user_type: req.body.user_type
+  },
+  function(callback){
+    res.redirect('/admin/student');
   });
 });
 
-// admin side
-
-// const Customers = require('./models/customer');
-
-app.get('/customers', function (req, res) {
-  client.query('SELECT * FROM customers ORDER BY id DESC')
-    .then((data) => {
-      console.log('results?', data.rows);
-      res.render('customers', { layout: 'submain',
-        result: data.rows
-      });
-    })
-    .catch((err) => {
-      console.log('error', err);
-      res.send('Error!');
-    });
-});
-
-app.get('/customers/:id', function (req, res) {
-  client.query("SELECT customers.first_name AS first_name, customers.middle_name AS middle_name, customers.last_name AS last_name, customers.email AS email, customers.state AS state, customers.city AS city, customers.street AS street, customers.zipcode AS zipcode, products.name AS product_name, orders.quantity AS quantity, orders.purchase_date AS purchase_date FROM orders INNER JOIN customers ON orders.customer_id=customers.id INNER JOIN products ON orders.product_id=products.id WHERE customers.id = '" + req.params.id + "' ORDER BY purchase_date DESC;")
-    .then((data) => {
-      console.log('results?', data);
-      res.render('customer-details', { layout: 'submain',
-        result: data.rows
-      });
-    })
-    .catch((err) => {
-      console.log('error', err);
-      res.send('Error!');
-    });
-});
-
-const Orders = require('./models/orders');
-
-app.get('/orders', function (req, res) {
-  Orders.list(client, {}, function (orders) {
-    res.render('orders', { layout: 'submain',
-      orders: orders
+/* -------- CLASS --------- */
+app.get('/admin/class', function (req, res) {
+  admin.classList({}, function(classList) {
+    res.render('admin/list_class', {
+    class_id: req.user.id,
+    batch: req.user.batch,
+    section: req.user.section,
+    first_name: req.user.first_name,
+    last_name: req.user.last_name,
+    adviser: req.user.adviser,
+    classes: classList
     });
   });
+});
+
+app.get('/admin/add_class', function (req, res) {
+  admin.facultyList({}, function(facultyList) {
+    res.render('admin/add_class', {
+    first_name: req.user.first_name,
+    last_name: req.user.last_name,
+    email: req.user.email,
+    phone: req.user.phone,
+    user_type: req.user.user_type,
+    faculties: facultyList
+    });
+  });
+});
+
+app.post('/admin/add_class', function (req, res) {
+  admin.createClass({
+    batch: req.body.batch,
+    section: req.body.section,
+    adviser: req.body.adviser
+  },
+  function(callback) {
+    res.redirect('/admin/class');
+  });
+});
+
+/* -------- GROUP --------- */
+app.get('/admin/group', function (req, res) {
+  res.render('admin/list_group', {
+  });
+});
+
+app.get('/admin/add_group', function (req, res) {
+  res.render('admin/add_group', {
+  })
 })
-;
-// app.get('/orders', function (req, res) {
-//   client.query('SELECT customers.first_name AS first_name, customers.middle_name AS middle_name, customers.last_name AS last_name, customers.email AS email, products.name AS products_name, orders.purchase_date AS purchase_date, orders.quantity AS quantity FROM orders INNER JOIN products ON orders.product_id=products.id INNER JOIN customers ON orders.customer_id=customers.id ORDER BY purchase_date DESC;')
-//     .then((data) => {
-//       console.log('results?', data);
-//       res.render('orders', { layout: 'submain',
-//         result: data.rows
-//       });
-//     })
-//     .catch((err) => {
-//       console.log('error', err);
-//       res.send('Error!');
-//     });
-// });
 
-app.post('/products/:id/forms', function (req, res) {
-  client.query('SELECT products.name AS name, products.id AS id FROM products LEFT JOIN brands ON products.brand_id=brands.id RIGHT JOIN products_category ON products.category_id=products_category.id WHERE products.id = ' + req.params.id + ';')
-    .then((results) => {
-      console.log('results?', results);
-      res.render('form', {
-        name: results.rows[0].name
-      });
-    })
-    .catch((err) => {
-      console.log('error', err);
-      res.send('Error!');
-    });
-});
-
-app.get('/product/add', function (req, res) {
-  res.render('add-product', { layout: 'submain'
-
+/* ------------------------ FACULTY PAGE ------------------------ */
+app.get('/faculty', function (req, res) {
+  res.render('faculty/dashboard', {
+    layout: 'faculty'
   });
 });
 
-app.get('/update/products/:id', function (req, res) {
-  client.query('SELECT * FROM products WHERE id = $1', [req.params.id], (err, data) => {
-    if (err) {}
-    client.query('SELECT * from brands', (err2, databrands) => {
-      client.query('SELECT * FROM products_category', (err3, datacategory) => {
-        res.render('update-products', { layout: 'submain',
-          product_name: data.rows[0].name,
-          product_id: data.rows[0].id,
-          product_description: data.rows[0].description,
-          product_tagline: data.rows[0].tagline,
-          product_price: data.rows[0].price,
-          product_warranty: data.rows[0].warranty,
-          product_brand_id: data.rows[0].brand_id,
-          product_category_id: data.rows[0].category_id,
-          brands: databrands.rows,
-          categories: datacategory.rows
-        });
+/* -------- FACULTY --------- */
+app.get('/faculty/class', function (req, res) {
+  faculty.listByFacultyID({id:req.user.id}, function(classList) {
+    res.render('faculty/list_my_class', {
+      batch: req.user.batch,
+      section: req.user.section,
+      classes: classList,
+      layout: 'faculty'
+    });
+  });
+});
+
+app.get('/faculty/class/:id', function (req, res) {
+  faculty.classList({id: req.user.id}, function (studentList) {
+    faculty.noClassList({}, function  (noClassList) {
+      res.render('faculty/class_detail', {
+        user_id: req.user.id,
+        student_number: req.user.student_number,
+        first_name: req.user.first_name,
+        last_name: req.user.last_name,
+        email: req.user.email,
+        phone: req.user.phone,
+        noClass: noClassList,
+        students: studentList,
+        layout: 'faculty'
       });
     });
   });
 });
 
-app.post('/update/product/form', function (req, res) {
-  const query = {
-    text: 'UPDATE products SET name = $1, description = $2, tagline = $3, price = $4, warranty = $5, brand_id = $6, image= $7, category_id = $8 WHERE id = $9',
-    values: [req.body.product_name, req.body.product_description, req.body.product_tagline, req.body.product_price, req.body.product_warranty, req.body.product_brand, req.body.product_category, req.body.product_id, req.body.product_image]
-  };
-  console.log(query);
-  client.query(query, (req, data) => {
-    res.redirect('/products');
+app.post('/faculty/class/:id/addStudent', function (req, res) {
+  faculty.insertStudent({
+    student_id: req.body.student_id
+  },
+  function(callback) {
+    res.redirect('/faculty/class/:id');
   });
 });
 
-app.post('/update/products', function (req, res) {
-  var id = req.body.product_id;
-  console.log(id);
-  res.redirect('/update/products/' + id);
-});
-
-app.get('/category/create', function (req, res) {
-  res.render('create-category', { layout: 'submain'
-
+/* ------------------------ STUDENT PAGE ------------------------ */
+app.get('/student', function (req, res) {
+  res.render('student/dashboard', {
+    layout: 'student'
   });
 });
 
-app.get('/brand/create', function (req, res) {
-  res.render('create-brand', { layout: 'submain'
-
+app.get('/student/profile', function (req, res) {
+  student.studentProfle({}, function (profileList) {
+    res.render('student/student_profile', {
+      student_number: req.body.student_number,
+      first_name: req.body.first_name,
+      last_name: req.body.last_name,
+      email: req.body.email,
+      phone: req.body.phone,
+      students: profileList,
+      layout: 'student'
+    });
   });
 });
 
-app.post('/brand/create/saving', function (req, res) {
-  console.log(req.body);
-  client.query("INSERT INTO brands (brand_name, brand_description) VALUES ('" + req.body.brand_name + "', '" + req.body.brand_description + "')");
-  res.redirect('/brand');
-});
-
-app.get('/brand', function (req, res) {
-  client.query('SELECT * FROM brands')
-    .then((data) => {
-      console.log('results?', data);
-      res.render('brand', { layout: 'submain',
-        result: data.rows
-      });
-    })
-    .catch((err) => {
-      console.log('error', err);
-      res.send('Error!');
-    });
-});
-
-app.post('/category/create/saving', function (req, res) {
-  console.log(req.body);
-  client.query("INSERT INTO products_category (name) VALUES ('" + req.body.name + "')");
-  res.redirect('/category');
-});
-
-app.get('/category', function (req, res) {
-  client.query('SELECT * FROM products_category')
-    .then((data) => {
-      console.log('results?', data);
-      res.render('category', { layout: 'submain',
-        result: data.rows
-      });
-    })
-    .catch((err) => {
-      console.log('error', err);
-      res.send('Error!');
-    });
-});
-
-app.post('/addproduct', function (req, res) {
-  console.log(req.body);
-  client.query("INSERT INTO products (name, description, tagline, price, warranty, brand_id, category_id, image) VALUES ('" + req.body.product_name + "', '" + req.body.product_description + "', '" + req.body.product_tagline + "', '" + req.body.product_price + "', '" + req.body.product_warranty + "', '" + req.body.product_brand + "', '" + req.body.product_category + "','" + req.body.product_image + "')");
-  res.redirect('/products');
-});
-
-app.get('/product/create', function (req, res) {
-  var category = [];
-  var brand = [];
-  var both = [];
-  client.query('SELECT * FROM brands')
-    .then((result) => {
-      brand = result.rows;
-      console.log('brand:', brand);
-      both.push(brand);
-    })
-    .catch((err) => {
-      console.log('error', err);
-      res.send('Error!');
-    });
-  client.query('SELECT * FROM products_category')
-    .then((result) => {
-      category = result.rows;
-      both.push(category);
-      console.log(category);
-      console.log(both);
-      res.render('add-product', { layout: 'submain',
-        rows: both
-      });
-    })
-    .catch((err) => {
-      console.log('error', err);
-      res.send('Error!');
-    });
-});
-
-app.get('/admins', function (req, res) {
-  res.render('admins', { layout: 'submain' });
-});
-
-app.get('/dashboard', function (req, res) {
-  res.render('dashboard', { layout: 'submain'
-
+app.get('/student/group', function (req, res) {
+  res.render('student/group', {
+    layout: 'student'
   });
 });
+
 // Server
-app.listen(app.get('port'), function () {
-  console.log('Server started at port 3000');
+app.listen(port, function () {
+  console.log('App Started on port ' + port);
 });

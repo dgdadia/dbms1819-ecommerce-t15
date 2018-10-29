@@ -1,0 +1,55 @@
+<div class="container-fluid" style="padding: 20px 20px">
+  <div class="admin_faculty_header">
+    <h3 style="display: inline-block">ADD CLASS</h3>
+    <a href="/admin/classes" style="display:inline-block; float:right"><button class="btn btn-sm ml-auto">&laquo;&ensp;Go back</button></a>
+    <hr>
+  </div>
+  <div class="admin_add_faculty_form">
+    <form method="POST" action="/admin/add_class">
+      <div class="row">
+        <div class="form-group col-md-8">
+          <label>Batch</label>
+          <select id="batch" name="batch" class="form-control">
+            <option value="2019">2019</option>
+            <option value="2018">2018</option>
+            <option value="2017">2017</option>
+            <option value="2016">2016</option>
+            <option value="2015">2015</option>
+            <option value="2014">2014</option>
+            <option value="2013">2013</option>
+            <option value="2012">2012</option>
+            <option value="2011">2011</option>
+            <option value="2010">2010</option>
+          </select>
+        </div>
+        <div class="form-group col-md-8">
+          <label>Section</label>
+          <select id="section" name="section" class="form-control">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="form-group col-md-8">
+          <label><h4>Adviser</h4></label>
+          <select name="adviser" class="form-control">
+          {{#each faculties}}
+            <option value="{{this.id}}">{{this.first_name}} {{this.last_name}}</option>
+          {{/each}}
+          </select>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-8">
+          <input class="btn btn-md" type="submit" name="save" value="&plus;&ensp;Add Class"> 
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
