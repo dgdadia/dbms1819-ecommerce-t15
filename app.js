@@ -366,25 +366,24 @@ app.post('/faculty/class/:id/addStudent', function (req, res) {
 });
 
 /* ------------------------ STUDENT PAGE ------------------------ */
-app.get('/student', function (req, res) {
-  res.render('student/dashboard', {
-    layout: 'student'
-  });
-});
+// app.get('/student', function (req, res) {
+//   res.render('student/dashboard', {
+//     layout: 'student'
+//   });
+// });
 
-app.get('/student/profile', function (req, res) {
-  student.studentProfle({}, function (profileList) {
-    res.render('student/student_profile', {
-      student_number: req.body.student_number,
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      email: req.body.email,
-      phone: req.body.phone,
-      students: profileList,
+app.get('/student', function (req, res) {
+  console.log("USER DETAILS",req.user)
+    res.render('student/dashboard', {
+      student_number: req.user.student_number,
+      first_name: req.user.first_name,
+      last_name: req.user.last_name,
+      email: req.user.email,
+      phone: req.user.phone,
       layout: 'student'
     });
   });
-});
+
 
 app.get('/student/group', function (req, res) {
   res.render('student/group', {

@@ -50,3 +50,8 @@ CREATE TABLE "group_members" (
   "group_id" INT REFERENCES group(id),
   "member_name" INT REFERENCES users(id)
 );
+
+CREATE TABLE "thesis" (
+ "title" VARCHAR(80) NOT NULL,
+ "description" VARCHAR(255) NOT NULL
+);
